@@ -8,15 +8,15 @@ import junit.framework.TestCase;
 public class BaiduApiServiceImplTest extends TestCase {
 
     public void testPlaylist() {
-        BaiduApiServiceImpl.INSTANCE.getOnlinePlaylist()
-                .subscribe(result -> {
-                });
-
-        System.out.println("------------------------------------");
-        BaiduApiServiceImpl.INSTANCE.getOnlineSongs("1", 10, 0)
-                .subscribe(musicList -> {
-                    System.out.println(musicList.get(0).toString());
-                });
+//        BaiduApiServiceImpl.INSTANCE.getOnlinePlaylist()
+//                .subscribe(result -> {
+//                });
+//
+//        System.out.println("------------------------------------");
+//        BaiduApiServiceImpl.INSTANCE.getOnlineSongs("1", 10, 0)
+//                .subscribe(musicList -> {
+//                    System.out.println(musicList.get(0).toString());
+//                });
 
         System.out.println("------------------------------------");
 //        BaiduApiServiceImpl.INSTANCE.getTingSongInfo("569080829")

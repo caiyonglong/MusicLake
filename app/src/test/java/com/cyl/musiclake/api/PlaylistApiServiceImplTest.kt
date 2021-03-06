@@ -12,10 +12,10 @@ class PlaylistApiServiceImplTest {
 
     @Test
     fun getPlaylist() {
-        PlaylistApiServiceImpl.getPlaylist()
-                .subscribe {
-                    print(it.toString())
-                }
+//        PlaylistApiServiceImpl.getPlaylist()
+//                .subscribe {
+//                    print(it.toString())
+//                }
     }
 
     @Test
