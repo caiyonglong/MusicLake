@@ -105,10 +105,10 @@ constructor() : BasePresenter<PlaylistContract.View>(), PlaylistContract.Present
     }
 
     /**
-     * 加载网易排行榜（0歌曲）
+     * 加载推荐歌单列表（0歌曲）
      */
     fun loadNetease(tag: String) {
-        val observable = NeteaseApiServiceImpl.getTopPlaylists(tag, 30)
+        val observable = NeteaseApiServiceImpl.getTopPlaylists(tag, 100)
         ApiManager.request(observable, object : RequestCallBack<MutableList<Playlist>> {
             override fun success(result: MutableList<Playlist>) {
                 mView?.showNeteaseCharts(result)
@@ -121,10 +121,10 @@ constructor() : BasePresenter<PlaylistContract.View>(), PlaylistContract.Present
     }
 
     /**
-     * 加载网易排行榜（0歌曲）
+     * 加载精品歌单列表（0歌曲）
      */
     fun loadHighQualityPlaylist(tag: String) {
-        val observable = NeteaseApiServiceImpl.getTopPlaylistsHigh(tag, 30, null)
+        val observable = NeteaseApiServiceImpl.getTopPlaylistsHigh(tag, 100, null)
         ApiManager.request(observable, object : RequestCallBack<MutableList<Playlist>> {
             override fun success(result: MutableList<Playlist>) {
                 mView?.showNeteaseCharts(result)

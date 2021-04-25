@@ -45,8 +45,8 @@ public class ApiManager {
     private static ApiManager sApiManager;
 
     private static long CONNECT_TIMEOUT = 60L;
-    private static long READ_TIMEOUT = 10L;
-    private static long WRITE_TIMEOUT = 10L;
+    private static long READ_TIMEOUT = 60L;
+    private static long WRITE_TIMEOUT = 60L;
     //设缓存有效期为1天
     private static final long CACHE_STALE_SEC = 60 * 60 * 24 * 1;
     //查询缓存的Cache-Control设置，为if-only-cache时只查询缓存而不会请求服务器，max-stale可以配合设置缓存失效时间
@@ -70,6 +70,14 @@ public class ApiManager {
             request = request.newBuilder().url(newUrl).build();
             return chain.proceed(request);
         }
+        return chain.proceed(request);
+    };
+    /**
+     * 网络拦截器
+     */
+    private static final Interceptor mNetInterceptor = chain -> {
+        Request request = chain.request().newBuilder()
+                .addHeader("Connection", "close").build();
         return chain.proceed(request);
     };
 
@@ -96,6 +104,7 @@ public class ApiManager {
                     }
 
                     mOkHttpClient = builder.cache(cache)
+                            .addInterceptor(mNetInterceptor)
                             .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
                             .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
                             .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
@@ -173,11 +182,11 @@ public class ApiManager {
                             String errorInfo = "";
                             try {
                                 errorInfo = ((HttpException) e).response().errorBody().string();
-                                if (errorInfo.startsWith("{")){
+                                if (errorInfo.startsWith("{")) {
                                     JSONObject jsonObject = new JSONObject(errorInfo);
                                     String error = jsonObject.getString("msg");
                                     result.error(error);
-                                }else{
+                                } else {
                                     result.error(errorInfo);
                                 }
                             } catch (IOException | JSONException e1) {

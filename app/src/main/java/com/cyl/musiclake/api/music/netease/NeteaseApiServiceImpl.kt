@@ -54,7 +54,7 @@ object NeteaseApiServiceImpl {
     }
 
     /**
-     * 获取歌单歌曲数据
+     * 获取歌单数据
      */
     fun getTopPlaylists(cat: String, limit: Int): Observable<MutableList<Playlist>> {
         return apiService.getTopPlaylist(cat, limit)

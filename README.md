@@ -25,6 +25,7 @@
 
 # 计划
 - [ ] 整理文档
+    - [musicApi接入和调试文档](./doc/音乐接口组件库接入.md)
 - [ ] 代码重构
 
 # 相关项目|音乐API
@@ -45,6 +46,13 @@
 - [More..](https://github.com/caiyonglong/MusicLake/blob/develop/app/build.gradle)
 
 # 软件运行截图
+
+
+
+    因为github限制，所有图片预览需要翻强或者git clone到本地才能预览
+
+
+
 <p>
 <img src="screenshots/preview1.png" width="225" height="400"/>
 <img src="screenshots/preview2.png" width="225" height="400"/>
