@@ -24,6 +24,7 @@ import com.danikula.videocache.HttpProxyCacheServer;
 import com.google.gson.Gson;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.util.FileDownloadLog;
+import com.sina.weibo.sdk.openapi.IWBAPI;
 import com.tencent.bugly.Bugly;
 import com.tencent.tauth.Tencent;
 
@@ -47,6 +48,8 @@ public class MusicApp extends MultiDexApplication {
 
     //QQ第三方登录
     public static Tencent mTencent;
+
+    public static IWBAPI iwbapi;
 
     public static Gson GSON = new Gson();
 

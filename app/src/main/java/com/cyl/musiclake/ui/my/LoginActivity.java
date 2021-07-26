@@ -5,10 +5,10 @@ import android.net.Uri;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.cyl.musicapi.netease.LoginInfo;
 import com.cyl.musiclake.BuildConfig;
+import com.cyl.musiclake.MusicApp;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.event.LoginEvent;
@@ -18,10 +18,11 @@ import com.cyl.musiclake.utils.LogUtil;
 import com.cyl.musiclake.utils.ToastUtils;
 import com.cyl.musiclake.utils.Tools;
 import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.sina.weibo.sdk.auth.AccessTokenKeeper;
+import com.sina.weibo.sdk.auth.AccessTokenHelper;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
-import com.sina.weibo.sdk.auth.WbConnectErrorMessage;
-import com.sina.weibo.sdk.auth.sso.SsoHandler;
+import com.sina.weibo.sdk.auth.WbAuthListener;
+import com.sina.weibo.sdk.common.UiError;
+import com.sina.weibo.sdk.openapi.IWBAPI;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -52,7 +53,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
     /**
      * 注意：SsoHandler 仅当 SDK 支持 SSO 时有效
      */
-    private SsoHandler mSsoHandler;
+    private IWBAPI mWBAPI;
 
     @Override
     protected int getLayoutResID() {
@@ -68,7 +69,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
         if (mPresenter != null) {
             mPresenter.attachView(this);
         }
-        mSsoHandler = new SsoHandler(LoginActivity.this);
+        mWBAPI = MusicApp.iwbapi;
     }
 
     @Override
@@ -94,7 +95,9 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
 
     @OnClick(R.id.wbLogin)
     public void wbLogin() {
-        mSsoHandler.authorize(new SelfWbAuthListener());
+        if (mWBAPI != null) {
+            mWBAPI.authorize(new SelfWbAuthListener());
+        }
     }
 
     @OnClick(R.id.qqlogin)
@@ -131,8 +134,8 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
         if (mPresenter != null) {
             mPresenter.onActivityResult(requestCode, resultCode, data);
         }
-        if (mSsoHandler != null) {
-            mSsoHandler.authorizeCallBack(requestCode, resultCode, data);
+        if (mWBAPI != null) {
+            mWBAPI.authorizeCallback(requestCode, resultCode, data);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -163,37 +166,36 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
     public void bindSuccess(LoginInfo loginInfo) {
     }
 
-    private class SelfWbAuthListener implements com.sina.weibo.sdk.auth.WbAuthListener {
+    private class SelfWbAuthListener implements WbAuthListener {
+
         @Override
-        public void onSuccess(final Oauth2AccessToken token) {
+        public void onComplete(Oauth2AccessToken oauth2AccessToken) {
             LoginActivity.this.runOnUiThread(() -> {
-                mAccessToken = token;
+                mAccessToken = oauth2AccessToken;
                 if (mAccessToken.isSessionValid()) {
                     // 显示 Token
                     updateTokenView(false);
                     // 保存 Token 到 SharedPreferences
-                    AccessTokenKeeper.writeAccessToken(LoginActivity.this, mAccessToken);
-                    Toast.makeText(LoginActivity.this,
-                            R.string.weibosdk_demo_toast_auth_success, Toast.LENGTH_SHORT).show();
+                    AccessTokenHelper.refreshAccessToken(LoginActivity.this, mAccessToken.getAccessToken());
+                    ToastUtils.show(LoginActivity.this, R.string.weibosdk_demo_toast_auth_success);
                 }
             });
         }
 
         @Override
-        public void cancel() {
-            Toast.makeText(LoginActivity.this,
-                    R.string.weibosdk_demo_toast_auth_canceled, Toast.LENGTH_LONG).show();
+        public void onError(UiError uiError) {
+            ToastUtils.show("微博授权出错");
         }
 
         @Override
-        public void onFailure(WbConnectErrorMessage errorMessage) {
-            Toast.makeText(LoginActivity.this, errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+        public void onCancel() {
+            ToastUtils.show("微博授权取消");
         }
     }
 
     private void updateTokenView(boolean b) {
         if (mPresenter != null) {
-            mPresenter.loginServer(mAccessToken.getToken(), mAccessToken.getUid(), Constants.OAUTH_WEIBO);
+            mPresenter.loginServer(mAccessToken.getAccessToken(), mAccessToken.getUid(), Constants.OAUTH_WEIBO);
         }
     }
 

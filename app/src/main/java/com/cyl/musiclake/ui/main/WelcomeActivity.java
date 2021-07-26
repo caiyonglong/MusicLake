@@ -15,8 +15,8 @@ import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.utils.SPUtils;
 import com.cyl.musiclake.utils.SystemUtils;
 import com.google.android.material.snackbar.Snackbar;
-import com.sina.weibo.sdk.WbSdk;
 import com.sina.weibo.sdk.auth.AuthInfo;
+import com.sina.weibo.sdk.openapi.WBAPIFactory;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.tencent.tauth.Tencent;
 
@@ -73,7 +73,10 @@ public class WelcomeActivity extends BaseActivity {
 
     private void initLogin() {
         //创建微博实例
-        WbSdk.install(this, new AuthInfo(this, Constants.APP_KEY, Constants.REDIRECT_URL, Constants.SCOPE));
+        AuthInfo authInfo = new AuthInfo(this, Constants.APP_KEY, Constants.REDIRECT_URL, Constants.SCOPE);
+        MusicApp.iwbapi = WBAPIFactory.createWBAPI(this);
+        MusicApp.iwbapi.registerApp(this, authInfo);
+
         //腾讯
         MusicApp.mTencent = Tencent.createInstance(Constants.APP_ID, this);
         //初始化socket，因后台服务器压力大，暂时注释

@@ -39,7 +39,7 @@ import com.cyl.musiclake.ui.my.user.User
 import com.cyl.musiclake.ui.my.user.UserStatus
 import com.cyl.musiclake.utils.*
 import com.liulishuo.filedownloader.FileDownloader
-import com.sina.weibo.sdk.auth.AccessTokenKeeper
+import com.sina.weibo.sdk.auth.AccessTokenHelper
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -368,10 +368,10 @@ fun Context.addDownloadQueue(result: Music, isBatch: Boolean = false, isCache: B
     val path = if (isCache) FileUtils.getMusicCacheDir() + result.artist + " - " + result.title + "(" + result.quality + ")"
     else FileUtils.getMusicDir() + result.artist + " - " + result.title + ".mp3"
     val task = FileDownloader.getImpl()
-            .create(result.uri)
-            .setPath(path)
-            .setCallbackProgressTimes(100)
-            .setListener(TaskItemAdapter.taskDownloadListener)
+        .create(result.uri)
+        .setPath(path)
+        .setCallbackProgressTimes(100)
+        .setListener(TaskItemAdapter.taskDownloadListener)
     val model = TasksManager.addTask(task.id, result.mid, result.title, result.uri, path, isCache)
     if (model != null) {
         TasksManager.addTaskForViewHolder(task)
@@ -400,16 +400,16 @@ fun getMusicDownloadUrl(music: Music, success: ((String) -> Unit)?) {
  */
 fun updateLoginToken() {
     ApiManager.request(PlaylistApiServiceImpl.checkLoginStatus(),
-            object : RequestCallBack<User> {
-                override fun success(result: User?) {
-                    EventBus.getDefault().post(LoginEvent(true, result))
-                }
-
-                override fun error(msg: String) {
-                    ToastUtils.show(msg)
-                    EventBus.getDefault().post(LoginEvent(false, null))
-                }
+        object : RequestCallBack<User> {
+            override fun success(result: User?) {
+                EventBus.getDefault().post(LoginEvent(true, result))
             }
+
+            override fun error(msg: String) {
+                ToastUtils.show(msg)
+                EventBus.getDefault().post(LoginEvent(false, null))
+            }
+        }
     )
 }
 
@@ -423,7 +423,7 @@ fun logout() {
     SPUtils.putAnyCommit(SPUtils.QQ_OPEN_ID, "")
     SocketManager.toggleSocket(false)
     MusicApp.mTencent?.logout(MusicApp.getAppContext())
-    AccessTokenKeeper.clear(MusicApp.getAppContext())
+    AccessTokenHelper.clearAccessToken(MusicApp.getAppContext())
     EventBus.getDefault().post(LoginEvent(false, null))
 }
 
@@ -465,9 +465,11 @@ fun Context.showCountDown(dismissListener: (checked: Boolean) -> Unit) {
                     dialog.cancel()
                     MaterialDialog(this@showCountDown).show {
                         title(R.string.custom_count_down_time)
-                        input(hintRes = R.string.count_down_minutes,
-                                maxLength = 4,
-                                inputType = InputType.TYPE_CLASS_NUMBER) { dialog, text ->
+                        input(
+                            hintRes = R.string.count_down_minutes,
+                            maxLength = 4,
+                            inputType = InputType.TYPE_CLASS_NUMBER
+                        ) { dialog, text ->
                             val isValid = text.toString().toInt() <= 24 * 60
                             dialog.setActionButtonEnabled(WhichButton.POSITIVE, isValid)
                         }
@@ -526,8 +528,10 @@ fun AppCompatActivity.showPlaylistRenameDialog(title: String? = null, success: (
         title(R.string.playlist_rename)
         positiveButton(R.string.sure)
         negativeButton(R.string.cancel)
-        input(hintRes = R.string.input_playlist, maxLength = 10, prefill = title,
-                inputType = InputType.TYPE_CLASS_TEXT) { dialog, input ->
+        input(
+            hintRes = R.string.input_playlist, maxLength = 10, prefill = title,
+            inputType = InputType.TYPE_CLASS_TEXT
+        ) { dialog, input ->
             LogUtil.e("=====", input.toString())
         }
         positiveButton {
