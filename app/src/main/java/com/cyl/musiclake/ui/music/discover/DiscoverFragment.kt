@@ -181,7 +181,6 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
             wangChartsRv?.adapter = mNeteaseAdapter
             wangChartsRv?.isFocusable = false
             wangChartsRv?.isNestedScrollingEnabled = false
-            mNeteaseAdapter?.bindToRecyclerView(wangChartsRv)
             mNeteaseAdapter?.setOnItemClickListener { adapter, view, position ->
                 val playlist = adapter.data[position] as Playlist
                 NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, playlist, Pair(view.findViewById(R.id.iv_cover), getString(R.string.transition_album)))
@@ -204,7 +203,6 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
             chartsArtistRcv?.adapter = mNeteaseAdapter
             chartsArtistRcv?.isFocusable = false
             chartsArtistRcv?.isNestedScrollingEnabled = false
-            mArtistListAdapter?.bindToRecyclerView(chartsArtistRcv)
             mArtistListAdapter?.setOnItemClickListener { adapter, view, position ->
                 val artist = adapter.data[position] as Artist
                 NavigationHelper.navigateToArtist(mFragmentComponent.activity, artist, Pair<View, String>(view.findViewById<View>(R.id.iv_cover), getString(R.string.transition_album)))
@@ -228,7 +226,6 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
             radioRsv?.adapter = mRadioAdapter
             radioRsv?.isFocusable = false
             radioRsv?.isNestedScrollingEnabled = false
-            mRadioAdapter?.bindToRecyclerView(radioRsv)
             mRadioAdapter?.setOnItemClickListener { _, view, position ->
                 NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, channels[position], Pair(view.findViewById(R.id.iv_cover), getString(R.string.transition_album)))
             }
@@ -261,7 +258,6 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
             recommendPlaylistRsv.adapter = mPlaylistAdapter
             recommendPlaylistRsv.isFocusable = false
             recommendPlaylistRsv.isNestedScrollingEnabled = false
-            mPlaylistAdapter?.bindToRecyclerView(recommendPlaylistRsv)
             mPlaylistAdapter?.setOnItemClickListener { adapter, view, position ->
                 val playlist = adapter.data[position] as Playlist
                 NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, playlist, Pair(view.findViewById(R.id.iv_cover), getString(R.string.transition_album)))
@@ -293,7 +289,6 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
                     mMusicAdapter?.notifyDataSetChanged()
                 }
             }
-            mMusicAdapter?.bindToRecyclerView(recommendRsv)
         } else {
             mMusicAdapter?.setNewData(recommend)
         }

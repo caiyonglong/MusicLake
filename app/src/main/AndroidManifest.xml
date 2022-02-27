@@ -12,7 +12,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 允许获得audio session ID -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 允许获得电话状态 -->
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
     <uses-permission
         android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
         tools:ignore="ProtectedPermissions" />
@@ -41,8 +41,8 @@
         android:label="@string/app_name"
         android:largeHeap="true"
         android:networkSecurityConfig="@xml/network_security_config"
-        android:requestLegacyExternalStorage="true"
         android:preserveLegacyExternalStorage="true"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@drawable/default_cover_music"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
@@ -57,6 +57,7 @@
 
         <activity
             android:name=".ui.main.WelcomeActivity"
+            android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Welcome">
             <intent-filter>
@@ -76,6 +77,7 @@
             android:theme="@style/MainActivityTheme" />
         <activity
             android:name=".ui.my.LoginActivity"
+            android:exported="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -181,6 +183,7 @@
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
             android:noHistory="true"
+            android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -206,6 +209,7 @@
         <activity
             android:name=".ui.music.importplaylist.ImportPlaylistActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
             android:label="@string/import_playlist"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden">
@@ -278,7 +282,9 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <receiver android:name=".player.MediaButtonIntentReceiver">
+        <receiver
+            android:name=".player.MediaButtonIntentReceiver"
+            android:exported="true">
             <intent-filter android:priority="2147483647">
                 <action android:name="android.media.AUDIO_BECOMING_NOISY" />
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
@@ -286,6 +292,7 @@
         </receiver>
         <receiver
             android:name=".ui.widget.appwidgets.StandardWidget"
+            android:exported="true"
             android:label="@string/widget_standard">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

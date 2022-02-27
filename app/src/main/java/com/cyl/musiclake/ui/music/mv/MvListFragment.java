@@ -57,18 +57,19 @@ public class MvListFragment extends BaseLazyFragment<MvListPresenter> implements
 
         //适配器
         mAdapter = new TopMvListAdapter(mvList);
-        mAdapter.bindToRecyclerView(mRecyclerView);
         if (mvType != null && mvType.equals("rank")) {
             //初始化列表
             LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
             layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             mRecyclerView.setLayoutManager(layoutManager);
 
-            mAdapter.setEnableLoadMore(true);
-            mAdapter.setOnLoadMoreListener(() -> mRecyclerView.postDelayed(() -> {
+            mAdapter.getLoadMoreModule().setEnableLoadMore(true);
+            mAdapter.getLoadMoreModule().setOnLoadMoreListener(() -> mRecyclerView.postDelayed(() -> {
                 //成功获取更多数据
-                mPresenter.loadMv(mvList.size());
-            }, 1000), mRecyclerView);
+                if (mPresenter != null) {
+                    mPresenter.loadMv(mvList.size());
+                }
+            }, 1000));
         } else {
             mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2, LinearLayoutManager.VERTICAL, false));
         }
@@ -124,7 +125,7 @@ public class MvListFragment extends BaseLazyFragment<MvListPresenter> implements
         } else if (mvType.equals("rank")) {
             mPresenter.loadMv(0);
         } else {
-            mAdapter.setEnableLoadMore(false);
+            mAdapter.getLoadMoreModule().setEnableLoadMore(false);
             mPresenter.loadRecentMv(30);
         }
     }

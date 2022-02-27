@@ -71,7 +71,7 @@ class VideoPlayerActivity : BaseVideoPlayerActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun showVideoInfoList(mvList: List<VideoInfoBean>) {
+    override fun showVideoInfoList(mvList: MutableList<VideoInfoBean>) {
     }
 
     override fun showMvComment(mvCommentInfo: List<CommentsItemInfo>) {

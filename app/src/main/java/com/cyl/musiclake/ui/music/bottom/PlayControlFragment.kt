@@ -199,7 +199,6 @@ class PlayControlFragment : BaseFragment<PlayPresenter>(), SeekBar.OnSeekBarChan
                     }
                 }
             })
-            mAdapter?.bindToRecyclerView(bottomPlayRcv)
         } else {
             mAdapter?.notifyDataSetChanged()
         }

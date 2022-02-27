@@ -83,7 +83,7 @@ class ChartsAdapter(val context: Context, val data: MutableList<GroupItemData>) 
 
             val playlist = data[position].data as Playlist
 
-            CoverLoader.loadImageView(mContext, playlist.coverUrl, holder.coverIv)
+            CoverLoader.loadImageView(context, playlist.coverUrl, holder.coverIv)
             holder.titleTv.text = playlist.name
             holder.updateFrequencyTv.text = playlist.updateFrequency
             holder.coverIv.setOnClickListener {
@@ -91,7 +91,7 @@ class ChartsAdapter(val context: Context, val data: MutableList<GroupItemData>) 
             }
         } else if (holder is ChartLargeViewHolder) {
             val playlist = data[position].data as Playlist
-            CoverLoader.loadImageView(mContext, playlist.coverUrl, holder.coverIv)
+            CoverLoader.loadImageView(context, playlist.coverUrl, holder.coverIv)
             playlist.updateFrequency?.let {
                 holder.updateFrequencyTv.text = it
                 holder.updateFrequencyTv.visibility = View.VISIBLE

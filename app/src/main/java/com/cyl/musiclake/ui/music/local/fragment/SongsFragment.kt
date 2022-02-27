@@ -47,7 +47,6 @@ class SongsFragment : BaseLazyFragment<SongsPresenter>(), SongsContract.View {
         mAdapter = SongAdapter(musicList)
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.adapter = mAdapter
-        mAdapter?.bindToRecyclerView(recyclerView)
         initHeaderView()
         iconIv.setOnClickListener { v ->
             if (musicList.size == 0) return@setOnClickListener
@@ -115,6 +114,6 @@ class SongsFragment : BaseLazyFragment<SongsPresenter>(), SongsContract.View {
     }
 
     override fun setEmptyView() {
-        mAdapter?.setEmptyView(R.layout.view_song_empty, recyclerView)
+        mAdapter?.setEmptyView(R.layout.view_song_empty)
     }
 }

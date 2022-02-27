@@ -39,17 +39,15 @@ class VideoListFragment : BaseLazyFragment<MvListPresenter?>(), MvListContract.V
         groupId = arguments?.getString("groupId")
         //适配器
         mAdapter = VideoListAdapter(videoList)
-        mAdapter?.bindToRecyclerView(recyclerView)
         if (groupId != null) {
             //初始化列表
             val layoutManager = LinearLayoutManager(activity)
             layoutManager.orientation = LinearLayoutManager.VERTICAL
             recyclerView.layoutManager = layoutManager
-            mAdapter?.setEnableLoadMore(true)
-            mAdapter?.setOnLoadMoreListener({
+            mAdapter?.loadMoreModule?.setOnLoadMoreListener {
 //               成功获取更多数据
                 loadVideoList(videoList.size)
-            }, recyclerView)
+            }
             recyclerView.adapter = mAdapter
         }
     }
@@ -60,8 +58,8 @@ class VideoListFragment : BaseLazyFragment<MvListPresenter?>(), MvListContract.V
     }
 
     override fun listener() {
-        mAdapter?.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter: BaseQuickAdapter<*, *>?, view: View?, position: Int ->
-            startActivity<VideoDetailActivity>(Extras.VIDEO_VID to videoList[position].vid,Extras.VIDEO_TYPE to 1)
+        mAdapter?.setOnItemClickListener { adapter, view, position ->
+            startActivity<VideoDetailActivity>(Extras.VIDEO_VID to videoList[position].vid, Extras.VIDEO_TYPE to 1)
         }
     }
 

@@ -128,7 +128,6 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
         recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         recyclerView.addItemDecoration(ItemDecoration(this, ItemDecoration.VERTICAL_LIST))
         recyclerView.adapter = mAdapter
-        mAdapter?.bindToRecyclerView(recyclerView)
         fab.setOnClickListener { PlayManager.play(0, musicList, pid) }
     }
 

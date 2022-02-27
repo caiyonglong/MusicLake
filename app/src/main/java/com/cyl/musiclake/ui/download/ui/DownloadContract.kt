@@ -10,7 +10,7 @@ interface DownloadContract {
     interface View : BaseContract.BaseView {
         fun showErrorInfo(msg: String)
 
-        fun showSongs(musicList: List<Music>)
+        fun showSongs(musicList: MutableList<Music>)
 
         fun showDownloadList(modelList: List<TasksManagerModel>)
     }

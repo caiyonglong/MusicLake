@@ -9,9 +9,7 @@ import com.cyl.musiclake.utils.LogUtil
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.analytics.AnalyticsListener
 import com.google.android.exoplayer2.audio.AudioAttributes
-import com.google.android.exoplayer2.source.MediaSource
-import com.google.android.exoplayer2.source.MediaSourceEventListener
-import com.google.android.exoplayer2.source.ProgressiveMediaSource
+import com.google.android.exoplayer2.source.*
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.ui.PlayerControlView
@@ -33,9 +31,9 @@ class MusicExoPlayer(var context: Context) : BasePlayer(), Player.EventListener 
 
 
     private val uAmpAudioAttributes = AudioAttributes.Builder()
-            .setContentType(C.CONTENT_TYPE_MUSIC)
-            .setUsage(C.USAGE_MEDIA)
-            .build()
+        .setContentType(C.CONTENT_TYPE_MUSIC)
+        .setUsage(C.USAGE_MEDIA)
+        .build()
 
     //exoPlayer播放器
     private val exoPlayer: SimpleExoPlayer by lazy {
@@ -48,17 +46,16 @@ class MusicExoPlayer(var context: Context) : BasePlayer(), Player.EventListener 
     private var mediaDataSourceFactory: DataSource.Factory? = null
     private var audioFocusWrapper: AudioFocusWrapper? = null
 
-    private var bandwidthMeter: DefaultBandwidthMeter = DefaultBandwidthMeter()
-    private var videoTrackSelectionFactory: AdaptiveTrackSelection.Factory =
-            AdaptiveTrackSelection.Factory(bandwidthMeter)
+    //    private var bandwidthMeter: DefaultBandwidthMeter = DefaultBandwidthMeter.Builder(this).build()
+    private var videoTrackSelectionFactory: AdaptiveTrackSelection.Factory = AdaptiveTrackSelection.Factory()
     private val trackSelector = DefaultTrackSelector(videoTrackSelectionFactory)
     private var loadControl: LoadControl? = null
 
     private val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
     private val audioAttributes = AudioAttributesCompat.Builder()
-            .setContentType(AudioAttributesCompat.CONTENT_TYPE_MUSIC)
-            .setUsage(AudioAttributesCompat.USAGE_MEDIA)
-            .build()
+        .setContentType(AudioAttributesCompat.CONTENT_TYPE_MUSIC)
+        .setUsage(AudioAttributesCompat.USAGE_MEDIA)
+        .build()
 
     init {
         initPlayer(true)
@@ -76,8 +73,8 @@ class MusicExoPlayer(var context: Context) : BasePlayer(), Player.EventListener 
     private fun initPlayer(playOnReady: Boolean) {
         //生成数据原实力
         mediaDataSourceFactory = DefaultDataSourceFactory(
-                context,
-                Util.getUserAgent(context, "MusicLakeApp")
+            context,
+            Util.getUserAgent(context, "MusicLakeApp")
         )
         //创建 player
         loadControl = DefaultLoadControl()
@@ -152,8 +149,8 @@ class MusicExoPlayer(var context: Context) : BasePlayer(), Player.EventListener 
      */
     private fun buildMediaSource(url: String): MediaSource? {
         LogUtil.d(TAG, "buildMediaSource $url")
-        val uri = Uri.parse(url)
-        return buildMediaSource(uri)
+        val mediaItem = MediaItem.Builder().setUri(Uri.parse(url)).build()
+        return buildMediaSource(mediaItem)
     }
 
     override fun isPlaying(): Boolean {
@@ -265,8 +262,11 @@ class MusicExoPlayer(var context: Context) : BasePlayer(), Player.EventListener 
         destroyPlayer()
     }
 
-    private fun buildMediaSource(uri: Uri): MediaSource? {
-        return ProgressiveMediaSource.Factory(mediaDataSourceFactory).createMediaSource(uri)
+    private fun buildMediaSource(mediaItem: MediaItem): MediaSource? {
+        mediaDataSourceFactory?.let {
+            return ProgressiveMediaSource.Factory(it).createMediaSource(mediaItem)
+        }
+        return null
     }
 
     /*********************************************************************************
@@ -282,18 +282,19 @@ class MusicExoPlayer(var context: Context) : BasePlayer(), Player.EventListener 
      *********************************************************************************
      */
     private inner class PlayerEventLogger : EventLogger(trackSelector) {
-        override fun onAudioSessionId(eventTime: AnalyticsListener.EventTime, audioSessionId: Int) {
-            super.onAudioSessionId(eventTime, audioSessionId)
-            LogUtil.d(TAG, "onAudioSessionId ${eventTime.realtimeMs} $audioSessionId")
+
+        override fun onAudioSessionIdChanged(eventTime: AnalyticsListener.EventTime, audioSessionId: Int) {
+            super.onAudioSessionIdChanged(eventTime, audioSessionId)
+            LogUtil.d(TAG, "onAudioSessionIdChanged ${eventTime.realtimeMs} $audioSessionId")
         }
 
         override fun onTimelineChanged(eventTime: AnalyticsListener.EventTime, reason: Int) {
             super.onTimelineChanged(eventTime, reason)
             LogUtil.d(TAG, "onTimelineChanged ${eventTime.realtimeMs} $reason")
             playbackListener?.onPlaybackProgress(
-                    eventTime.currentPlaybackPositionMs,
-                    eventTime.realtimeMs,
-                    eventTime.totalBufferedDurationMs
+                eventTime.currentPlaybackPositionMs,
+                eventTime.realtimeMs,
+                eventTime.totalBufferedDurationMs
             )
         }
 
@@ -305,9 +306,9 @@ class MusicExoPlayer(var context: Context) : BasePlayer(), Player.EventListener 
         }
 
         override fun onPlayerStateChanged(
-                eventTime: AnalyticsListener.EventTime,
-                playWhenReady: Boolean,
-                state: Int
+            eventTime: AnalyticsListener.EventTime,
+            playWhenReady: Boolean,
+            state: Int
         ) {
             super.onPlayerStateChanged(eventTime, playWhenReady, state)
             LogUtil.d(TAG, "onPlayerStateChanged ${eventTime.realtimeMs} $playWhenReady $state")
@@ -320,8 +321,8 @@ class MusicExoPlayer(var context: Context) : BasePlayer(), Player.EventListener 
         }
 
         override fun onPlayerError(
-                eventTime: AnalyticsListener.EventTime,
-                error: ExoPlaybackException
+            eventTime: AnalyticsListener.EventTime,
+            error: ExoPlaybackException
         ) {
             super.onPlayerError(eventTime, error)
             LogUtil.d(TAG, "onPlayerError ${eventTime.realtimeMs} ${error.message}")
@@ -329,11 +330,11 @@ class MusicExoPlayer(var context: Context) : BasePlayer(), Player.EventListener 
         }
 
         override fun onLoadError(
-                eventTime: AnalyticsListener.EventTime,
-                loadEventInfo: MediaSourceEventListener.LoadEventInfo,
-                mediaLoadData: MediaSourceEventListener.MediaLoadData,
-                error: IOException,
-                wasCanceled: Boolean
+            eventTime: AnalyticsListener.EventTime,
+            loadEventInfo: LoadEventInfo,
+            mediaLoadData: MediaLoadData,
+            error: IOException,
+            wasCanceled: Boolean
         ) {
             super.onLoadError(eventTime, loadEventInfo, mediaLoadData, error, wasCanceled)
             LogUtil.d(TAG, "onLoadError ${error.message}")

@@ -41,7 +41,6 @@ class TopPlaylistFragment : BaseFragment<PlaylistPresenter>(), PlaylistContract.
             playlistRcv?.adapter = mNeteaseAdapter
             playlistRcv?.isFocusable = false
             playlistRcv?.isNestedScrollingEnabled = false
-            mNeteaseAdapter?.bindToRecyclerView(playlistRcv)
             mNeteaseAdapter?.setOnItemClickListener { adapter, view, position ->
                 val playlist = adapter.data[position] as Playlist
                 NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, playlist, Pair(view.findViewById(R.id.iv_cover), getString(R.string.transition_album)))

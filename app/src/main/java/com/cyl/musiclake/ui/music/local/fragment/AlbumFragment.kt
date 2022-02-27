@@ -47,7 +47,6 @@ class AlbumFragment : BaseLazyFragment<AlbumPresenter>(), AlbumsContract.View {
         mAdapter = AlbumAdapter(albumList)
         recyclerView.layoutManager = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL)
         recyclerView.adapter = mAdapter
-        mAdapter?.bindToRecyclerView(recyclerView)
     }
 
     override fun initInjector() {
@@ -73,10 +72,10 @@ class AlbumFragment : BaseLazyFragment<AlbumPresenter>(), AlbumsContract.View {
         super.hideLoading()
     }
 
-    override fun showAlbums(albumList: List<Album>) {
-        mAdapter?.setNewData(albumList)
+    override fun showAlbums(albumList: MutableList<Album>) {
+        mAdapter?.setNewInstance(albumList)
         if (albumList.isEmpty()) {
-            mAdapter?.setEmptyView(R.layout.view_song_empty, recyclerView)
+            mAdapter?.setEmptyView(R.layout.view_song_empty)
         }
     }
 

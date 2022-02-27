@@ -32,6 +32,7 @@ class PlaylistSearchActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
      * 搜索信息
      */
     private var queryString: String = ""
+
     /**
      * 搜索结果
      */
@@ -74,13 +75,11 @@ class PlaylistSearchActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
     }
 
     override fun initData() {
-        mAdapter.setEnableLoadMore(true)
         //初始化列表
         val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         layoutManager.orientation = androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
         resultListRcv.layoutManager = layoutManager
         resultListRcv.adapter = mAdapter
-        mAdapter.bindToRecyclerView(resultListRcv)
 
     }
 
@@ -124,7 +123,7 @@ class PlaylistSearchActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
         mAdapter.setOnItemClickListener { _, view, position ->
             if (musicList.size <= position) return@setOnItemClickListener
             //播放歌单内搜索结果队列
-            PlayManager.play(position,searchResults,queryString.hashCode().toString())
+            PlayManager.play(position, searchResults, queryString.hashCode().toString())
         }
         mAdapter.setOnItemChildClickListener { _, _, position ->
             val music = searchResults[position]
@@ -151,14 +150,14 @@ class PlaylistSearchActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
             queryString = query.toLowerCase()
             musicList.forEach {
                 if (it.title?.toLowerCase()?.contains(queryString) == true ||
-                        it.artist?.toLowerCase()?.contains(queryString) == true ||
-                        it.album?.toLowerCase()?.contains(queryString) == true
+                    it.artist?.toLowerCase()?.contains(queryString) == true ||
+                    it.album?.toLowerCase()?.contains(queryString) == true
                 ) {
                     searchResults.add(it)
                 }
             }
         }
-        mAdapter.setNewData(searchResults)
+        mAdapter.setNewInstance(searchResults)
     }
 
     override fun onResume() {

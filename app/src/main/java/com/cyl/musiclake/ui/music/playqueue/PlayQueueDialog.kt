@@ -30,7 +30,7 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
     private lateinit var clearAllIv: ImageView
     private lateinit var recyclerView: androidx.recyclerview.widget.RecyclerView
     private var mPresenter: PlayQueuePresenter? = null
-    private var musicList: List<Music> = ArrayList()
+    private var musicList: MutableList<Music> = ArrayList()
     private var mAdapter: QueueAdapter? = null
 
     private var mBehavior: BottomSheetBehavior<*>? = null
@@ -54,7 +54,6 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
 
         recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
         recyclerView.adapter = mAdapter
-        mAdapter?.bindToRecyclerView(recyclerView)
         recyclerView.scrollToPosition(PlayManager.getCurrentPosition())
         initListener()
         mPresenter?.loadSongs()
@@ -158,11 +157,11 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
         return null
     }
 
-    override fun showSongs(songs: List<Music>) {
+    override fun showSongs(songs: MutableList<Music>) {
         musicList = songs
         songSumTv.text = "(${songs.size})"
         updatePlayMode()
-        mAdapter?.setNewData(songs)
+        mAdapter?.setNewInstance(songs)
         //滚动到正在播放的位置
         recyclerView.scrollToPosition(PlayManager.position())
 

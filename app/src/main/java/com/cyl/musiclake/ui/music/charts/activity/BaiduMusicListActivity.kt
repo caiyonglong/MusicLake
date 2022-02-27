@@ -45,17 +45,17 @@ class BaiduMusicListActivity : BasePlaylistActivity() {
 
     override fun listener() {
         super.listener()
-        mAdapter?.setOnLoadMoreListener({
-            recyclerView.postDelayed({
-                if (mCurrentCounter < TOTAL_COUNTER) {
-                    //数据全部加载完毕
-                    mAdapter?.loadMoreEnd()
-                } else {
-                    //成功获取更多数据
-                    mPlaylist?.pid?.let { mPresenter?.loadOnlineMusicList(it, limit, mOffset) }
-                }
-            }, 1000)
-        }, recyclerView)
+//        mAdapter?.setOnLoadMoreListener({
+//            recyclerView.postDelayed({
+//                if (mCurrentCounter < TOTAL_COUNTER) {
+//                    //数据全部加载完毕
+//                    mAdapter?.loadMoreEnd()
+//                } else {
+//                    //成功获取更多数据
+//                    mPlaylist?.pid?.let { mPresenter?.loadOnlineMusicList(it, limit, mOffset) }
+//                }
+//            }, 1000)
+//        }, recyclerView)
     }
 
 

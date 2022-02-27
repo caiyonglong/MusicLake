@@ -6,12 +6,11 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.widget.ImageView
+import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.cyl.musiclake.R
-import com.cyl.musiclake.api.GlideApp
 import com.cyl.musiclake.api.music.MusicUtils
 import com.cyl.musiclake.bean.Music
 
@@ -31,8 +30,9 @@ object CoverLoader {
         var uri: String? = null
         try {
             val cursor = context.contentResolver.query(
-                    Uri.parse("content://media/external/audio/albums/$albumId"),
-                    arrayOf("album_art"), null, null, null)
+                Uri.parse("content://media/external/audio/albums/$albumId"),
+                arrayOf("album_art"), null, null, null
+            )
             if (cursor != null) {
                 cursor.moveToNext()
                 uri = cursor.getString(0)
@@ -85,44 +85,44 @@ object CoverLoader {
         if (music == null) return
         if (mContext == null) return
         val url = MusicUtils.getAlbumPic(music.coverUri, music.type, MusicUtils.PIC_SIZE_BIG)
-        GlideApp.with(mContext)
-                .asBitmap()
-                .load(url ?: R.drawable.default_cover_place)
-                .error(coverUriByRandom)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into<CustomTarget<Bitmap>>(object : CustomTarget<Bitmap>() {
-                    override fun onLoadCleared(placeholder: Drawable?) {
+        Glide.with(mContext)
+            .asBitmap()
+            .load(url ?: R.drawable.default_cover_place)
+            .error(coverUriByRandom)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .into<CustomTarget<Bitmap>>(object : CustomTarget<Bitmap>() {
+                override fun onLoadCleared(placeholder: Drawable?) {
 
-                    }
+                }
 
-                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                        if (callBack != null && resource != null) {
-                            callBack.invoke(resource)
-                        }
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    if (callBack != null && resource != null) {
+                        callBack.invoke(resource)
                     }
-                })
+                }
+            })
     }
 
     fun loadBigImageView(mContext: Context, music: Music?, imageView: ImageView?) {
         if (music == null || imageView == null) return
         val url = getCoverUriByMusic(music, true)
-        GlideApp.with(mContext)
-                .asBitmap()
-                .load(url ?: R.drawable.default_cover_place)
-                .error(coverUriByRandom)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(imageView)
+        Glide.with(mContext)
+            .asBitmap()
+            .load(url ?: R.drawable.default_cover_place)
+            .error(coverUriByRandom)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .into(imageView)
     }
 
     fun loadBigImageView(mContext: Context, url: String?, vendor: String?, imageView: ImageView?) {
         if (imageView == null) return
         val newUrl = MusicUtils.getAlbumPic(url, vendor, MusicUtils.PIC_SIZE_BIG)
-        GlideApp.with(mContext)
-                .asBitmap()
-                .load(newUrl)
-                .error(coverUriByRandom)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(imageView)
+        Glide.with(mContext)
+            .asBitmap()
+            .load(newUrl)
+            .error(coverUriByRandom)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .into(imageView)
     }
 
     /**
@@ -135,24 +135,24 @@ object CoverLoader {
     fun loadImageView(mContext: Context?, url: String?, imageView: ImageView?) {
         if (mContext == null) return
         if (imageView == null) return
-        GlideApp.with(mContext)
-                .load(url)
-                .placeholder(R.drawable.default_cover_place)
-                .error(R.drawable.default_cover_place)
-                .centerCrop()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(imageView)
+        Glide.with(mContext)
+            .load(url)
+            .placeholder(R.drawable.default_cover_place)
+            .error(R.drawable.default_cover_place)
+            .centerCrop()
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .into(imageView)
     }
 
     fun loadImageView(mContext: Context?, url: String?, defaultUrl: Int, imageView: ImageView) {
         if (mContext == null) return
-        GlideApp.with(mContext)
-                .load(url)
-                .placeholder(defaultUrl)
-                .error(defaultUrl)
-                .centerCrop()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(imageView)
+        Glide.with(mContext)
+            .load(url)
+            .placeholder(defaultUrl)
+            .error(defaultUrl)
+            .centerCrop()
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .into(imageView)
     }
 
     /**
@@ -175,20 +175,20 @@ object CoverLoader {
      */
     fun loadBitmap(mContext: Context?, url: String?, callBack: ((Bitmap) -> Unit)?) {
         if (mContext == null) return
-        GlideApp.with(mContext)
-                .asBitmap()
-                .load(url ?: coverUriByRandom)
-                .error(coverUriByRandom)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into<CustomTarget<Bitmap>>(object : CustomTarget<Bitmap>() {
-                    override fun onLoadCleared(placeholder: Drawable?) {
+        Glide.with(mContext)
+            .asBitmap()
+            .load(url ?: coverUriByRandom)
+            .error(coverUriByRandom)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .into<CustomTarget<Bitmap>>(object : CustomTarget<Bitmap>() {
+                override fun onLoadCleared(placeholder: Drawable?) {
 
-                    }
+                }
 
-                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                        callBack?.invoke(resource)
-                    }
-                })
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    callBack?.invoke(resource)
+                }
+            })
     }
 
     /**
@@ -200,20 +200,20 @@ object CoverLoader {
      */
     fun loadDrawable(mContext: Context?, url: String?, callBack: ((Drawable) -> Unit)?) {
         if (mContext == null) return
-        GlideApp.with(mContext)
-                .asBitmap()
-                .load(url ?: coverUriByRandom)
-                .error(coverUriByRandom)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into<CustomTarget<Bitmap>>(object : CustomTarget<Bitmap>() {
-                    override fun onLoadCleared(placeholder: Drawable?) {
+        Glide.with(mContext)
+            .asBitmap()
+            .load(url ?: coverUriByRandom)
+            .error(coverUriByRandom)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .into<CustomTarget<Bitmap>>(object : CustomTarget<Bitmap>() {
+                override fun onLoadCleared(placeholder: Drawable?) {
 
-                    }
+                }
 
-                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                        callBack?.invoke(BitmapDrawable(mContext.resources, resource))
-                    }
-                })
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    callBack?.invoke(BitmapDrawable(mContext.resources, resource))
+                }
+            })
     }
 
     fun createBlurredImageFromBitmap(bitmap: Bitmap?): Drawable {

@@ -10,7 +10,7 @@ import com.cyl.musiclake.ui.base.BaseContract.BaseView
 
 interface VideoDetailContract {
     interface View : BaseView {
-        fun showVideoInfoList(mvList: List<VideoInfoBean>)
+        fun showVideoInfoList(mvList: MutableList<VideoInfoBean>)
         fun showBaiduMvDetailInfo(mvInfoBean: MvInfoBean?)
         fun showMvDetailInfo(mvInfoDetailInfo: VideoInfoBean?)
         fun showMvUrlInfo(mvUrl: String?)

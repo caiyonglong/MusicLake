@@ -1,15 +1,14 @@
 package com.cyl.musiclake.ui.music.playqueue
 
-import androidx.core.content.ContextCompat
 import android.view.View
 import android.widget.TextView
-
-import com.chad.library.adapter.base.BaseItemDraggableAdapter
-import com.chad.library.adapter.base.BaseViewHolder
+import androidx.core.content.ContextCompat
+import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.module.DraggableModule
+import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.cyl.musiclake.R
-import com.cyl.musiclake.api.music.MusicApi
-import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.bean.Music
+import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.player.PlayManager
 import com.cyl.musiclake.ui.theme.ThemeStore
 import com.cyl.musiclake.utils.ConvertUtils
@@ -21,20 +20,24 @@ import org.jetbrains.anko.dip
  * Created by D22434 on 2017/9/26.ß
  */
 
-class PlayQueueAdapter(musicList: List<Music>) : BaseItemDraggableAdapter<Music, BaseViewHolder>(R.layout.item_play_queue, musicList) {
+class PlayQueueAdapter(musicList: MutableList<Music>) : BaseQuickAdapter<Music, BaseViewHolder>(R.layout.item_play_queue, musicList), DraggableModule {
+
+    init {
+        addChildClickViewIds(R.id.iv_more, R.id.iv_love)
+    }
 
     override fun convert(holder: BaseViewHolder, item: Music) {
-        CoverLoader.loadImageView(mContext, item.coverUri, holder.getView(R.id.iv_cover))
+        CoverLoader.loadImageView(context, item.coverUri, holder.getView(R.id.iv_cover))
         holder.setText(R.id.tv_title, ConvertUtils.getTitle(item.title))
 
         //音质图标显示
         val quality = when {
-            item.sq -> mContext.resources.getDrawable(R.drawable.sq_icon, null)
-            item.hq -> mContext.resources.getDrawable(R.drawable.hq_icon, null)
+            item.sq -> context.resources.getDrawable(R.drawable.sq_icon, null)
+            item.hq -> context.resources.getDrawable(R.drawable.hq_icon, null)
             else -> null
         }
         quality?.let {
-            quality.setBounds(0, 0, quality.minimumWidth + mContext.dip(2), quality.minimumHeight)
+            quality.setBounds(0, 0, quality.minimumWidth + context.dip(2), quality.minimumHeight)
             holder.getView<TextView>(R.id.tv_artist).setCompoundDrawables(quality, null, null, null)
         }
         //设置歌手专辑名
@@ -42,22 +45,21 @@ class PlayQueueAdapter(musicList: List<Music>) : BaseItemDraggableAdapter<Music,
         //设置播放状态
         if (PlayManager.getPlayingId() == item.mid) {
             holder.getView<View>(R.id.v_playing).visibility = View.VISIBLE
-            holder.setTextColor(R.id.tv_title, ContextCompat.getColor(mContext, R.color.app_green))
-            holder.setTextColor(R.id.tv_artist, ContextCompat.getColor(mContext, R.color.app_green))
+            holder.setTextColor(R.id.tv_title, ContextCompat.getColor(context, R.color.app_green))
+            holder.setTextColor(R.id.tv_artist, ContextCompat.getColor(context, R.color.app_green))
         } else {
             if (ThemeStore.THEME_MODE == ThemeStore.DAY) {
-                holder.setTextColor(R.id.tv_title, ContextCompat.getColor(mContext, R.color.black))
+                holder.setTextColor(R.id.tv_title, ContextCompat.getColor(context, R.color.black))
             } else {
-                holder.setTextColor(R.id.tv_title, ContextCompat.getColor(mContext, R.color.white))
+                holder.setTextColor(R.id.tv_title, ContextCompat.getColor(context, R.color.white))
             }
             holder.getView<View>(R.id.v_playing).visibility = View.GONE
-            holder.setTextColor(R.id.tv_artist, ContextCompat.getColor(mContext, R.color.grey))
+            holder.setTextColor(R.id.tv_artist, ContextCompat.getColor(context, R.color.grey))
         }
-        holder.addOnClickListener(R.id.iv_more)
 
         if (item.isCp) {
-            holder.setTextColor(R.id.tv_title, ContextCompat.getColor(mContext, R.color.grey))
-            holder.setTextColor(R.id.tv_artist, ContextCompat.getColor(mContext, R.color.grey))
+            holder.setTextColor(R.id.tv_title, ContextCompat.getColor(context, R.color.grey))
+            holder.setTextColor(R.id.tv_artist, ContextCompat.getColor(context, R.color.grey))
         }
 
         if (item.type == Constants.LOCAL) {
@@ -80,14 +82,14 @@ class PlayQueueAdapter(musicList: List<Music>) : BaseItemDraggableAdapter<Music,
             }
         }
 //        if (item.coverUri != null) {
-//            CoverLoader.loadImageView(mContext, item.coverUri, holder.getView(R.id.iv_cover))
+//            CoverLoader.loadImageView(context, item.coverUri, holder.getView(R.id.iv_cover))
 //        }
 //        if (item.coverUri.isNullOrEmpty()) {
 //            //加载歌曲专辑图
 //            item.title?.let {
 //                MusicApi.getMusicAlbumPic(item.title.toString(), success = {
 //                    item.coverUri = it
-//                    CoverLoader.loadImageView(mContext, it, holder.getView(R.id.iv_cover))
+//                    CoverLoader.loadImageView(context, it, holder.getView(R.id.iv_cover))
 //                })
 //            }
 //        }
@@ -96,7 +98,5 @@ class PlayQueueAdapter(musicList: List<Music>) : BaseItemDraggableAdapter<Music,
                 ToastUtils.show("歌曲无法播放")
             }
         }
-        holder.addOnClickListener(R.id.iv_more)
-        holder.addOnClickListener(R.id.iv_love)
     }
 }

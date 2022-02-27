@@ -6,13 +6,13 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
+import com.chad.library.adapter.base.dragswipe.DragAndSwipeCallback;
 import com.chad.library.adapter.base.listener.OnItemDragListener;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.bean.Playlist;
-import com.cyl.musiclake.data.PlaylistLoader;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.Extras;
+import com.cyl.musiclake.data.PlaylistLoader;
 import com.cyl.musiclake.ui.UIUtilsKt;
 import com.cyl.musiclake.ui.base.BaseActivity;
 import com.cyl.musiclake.ui.music.edit.PlaylistManagerUtils;
@@ -56,15 +56,14 @@ public class PlaylistManagerActivity extends BaseActivity {
 
         mAdapter = new PlaylistEditAdapter(playlists);
         mPlaylistRcv.setAdapter(mAdapter);
-        mAdapter.bindToRecyclerView(mPlaylistRcv);
 
-        ItemDragAndSwipeCallback itemDragAndSwipeCallback = new ItemDragAndSwipeCallback(mAdapter);
+        DragAndSwipeCallback itemDragAndSwipeCallback = new DragAndSwipeCallback(mAdapter.getDraggableModule());
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemDragAndSwipeCallback);
         itemTouchHelper.attachToRecyclerView(mPlaylistRcv);
 
         // 开启拖拽
-        mAdapter.enableDragItem(itemTouchHelper);
-        mAdapter.setOnItemDragListener(new OnItemDragListener() {
+        mAdapter.getDraggableModule().setItemTouchHelper(itemTouchHelper);
+        mAdapter.getDraggableModule().setOnItemDragListener(new OnItemDragListener() {
             @Override
             public void onItemDragStart(RecyclerView.ViewHolder viewHolder, int pos) {
 

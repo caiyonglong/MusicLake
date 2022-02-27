@@ -49,12 +49,10 @@ class VideoCommentFragment : BaseLazyFragment<VideoDetailPresenter>(), VideoDeta
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = mCommentAdapter
         recyclerView.isNestedScrollingEnabled = false
-        mCommentAdapter?.bindToRecyclerView(recyclerView)
-        mCommentAdapter?.setEnableLoadMore(true)
-        mCommentAdapter?.setOnLoadMoreListener({
+        mCommentAdapter?.loadMoreModule?.setOnLoadMoreListener {
 //               成功获取更多数据
             mPresenter?.loadMvComment(vid, mType, videoCommentList.size - offset)
-        }, recyclerView)
+        }
     }
 
     override fun listener() {
@@ -74,11 +72,8 @@ class VideoCommentFragment : BaseLazyFragment<VideoDetailPresenter>(), VideoDeta
     override fun showMvComment(list: List<CommentsItemInfo>) {
         hideLoading()
         videoCommentList.addAll(list)
-        if (list.isEmpty()) {
-            mCommentAdapter?.loadMoreEnd()
-        } else {
-            mCommentAdapter?.setNewData(videoCommentList)
-        }
+        mCommentAdapter?.loadMoreModule?.loadMoreComplete()
+        mCommentAdapter?.setNewInstance(videoCommentList)
     }
 
     override fun showMvUrlInfo(mvUrl: String?) {
@@ -87,7 +82,7 @@ class VideoCommentFragment : BaseLazyFragment<VideoDetailPresenter>(), VideoDeta
     override fun showMvDetailInfo(mvInfoDetailInfo: VideoInfoBean?) {
     }
 
-    override fun showVideoInfoList(mvList: List<VideoInfoBean>) {
+    override fun showVideoInfoList(mvList: MutableList<VideoInfoBean>) {
     }
 
     override fun showBaiduMvDetailInfo(mvInfoBean: MvInfoBean?) {

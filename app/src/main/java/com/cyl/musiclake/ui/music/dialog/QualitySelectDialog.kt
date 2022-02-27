@@ -15,7 +15,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
-import com.chad.library.adapter.base.BaseViewHolder
+import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.Music
 import com.cyl.musiclake.player.PlayManager
@@ -97,7 +97,7 @@ class QualitySelectDialog : BaseBottomSheetDialogFragment() {
         }
     }
 
-    inner class QualityDAdapter(qualities: List<QualityItem>) : BaseQuickAdapter<QualityItem, BaseViewHolder>(R.layout.item_quality_select, qualities) {
+    inner class QualityDAdapter(qualities: MutableList<QualityItem>) : BaseQuickAdapter<QualityItem, BaseViewHolder>(R.layout.item_quality_select, qualities) {
 
         override fun convert(helper: BaseViewHolder, item: QualityItem) {
             helper.setText(R.id.tv_title, item.name)

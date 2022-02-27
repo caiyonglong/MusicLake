@@ -1,6 +1,7 @@
 package com.cyl.musiclake.ui.music.playlist.love;
 
 import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.appcompat.widget.PopupMenu;
@@ -58,10 +59,9 @@ public class LoveFragment extends BaseFragment<LovePresenter> implements LoveCon
         }
 
         mAdapter = new SongAdapter(musicInfos);
-        mAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
+        mAdapter.setAnimationWithDefault(BaseQuickAdapter.AnimationType.SlideInLeft);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAdapter);
-        mAdapter.bindToRecyclerView(mRecyclerView);
 
     }
 

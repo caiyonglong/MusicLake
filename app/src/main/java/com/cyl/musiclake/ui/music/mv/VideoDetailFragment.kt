@@ -38,14 +38,11 @@ class VideoDetailFragment : BaseFragment<VideoDetailPresenter>(), VideoDetailCon
 
     public override fun initViews() {
         mAdapter = SimiMvListAdapter(mutableListOf())
-        mAdapter?.setEnableLoadMore(true)
-
         val layoutManager = LinearLayoutManager(activity)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         similarVideoRcv.layoutManager = layoutManager
         similarVideoRcv.adapter = mAdapter
         similarVideoRcv.isNestedScrollingEnabled = false
-        mAdapter?.bindToRecyclerView(similarVideoRcv)
     }
 
     override fun initInjector() {
@@ -77,8 +74,8 @@ class VideoDetailFragment : BaseFragment<VideoDetailPresenter>(), VideoDetailCon
         mvInfoDetailInfo?.let { updateMvInfo(it) }
     }
 
-    override fun showVideoInfoList(mvList: List<VideoInfoBean>) {
-        mAdapter?.setNewData(mvList)
+    override fun showVideoInfoList(mvList: MutableList<VideoInfoBean>) {
+        mAdapter?.setNewInstance(mvList)
         mAdapter?.setOnItemClickListener { _: BaseQuickAdapter<*, *>?, view: View?, position: Int ->
             val intent = Intent(activity, VideoDetailActivity::class.java)
             intent.putExtra(Extras.VIDEO_VID, mvList[position].vid)

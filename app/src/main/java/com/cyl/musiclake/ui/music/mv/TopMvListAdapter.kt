@@ -5,7 +5,8 @@ import android.text.TextUtils
 import android.view.View
 import android.widget.ImageView
 import com.chad.library.adapter.base.BaseQuickAdapter
-import com.chad.library.adapter.base.BaseViewHolder
+import com.chad.library.adapter.base.module.LoadMoreModule
+import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.cyl.musicapi.netease.MvInfoDetail
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.music.netease.NeteaseApiServiceImpl
@@ -24,7 +25,7 @@ import de.hdodenhof.circleimageview.CircleImageView
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-class TopMvListAdapter(list: List<MvInfoDetail>) : BaseQuickAdapter<MvInfoDetail, BaseViewHolder>(R.layout.item_mv_list, list) {
+class TopMvListAdapter(list: MutableList<MvInfoDetail>) : BaseQuickAdapter<MvInfoDetail, BaseViewHolder>(R.layout.item_mv_list, list) {
 
     override fun convert(helper: BaseViewHolder, detail: MvInfoDetail) {
         helper.setText(R.id.tv_title, detail.name)
@@ -35,14 +36,14 @@ class TopMvListAdapter(list: List<MvInfoDetail>) : BaseQuickAdapter<MvInfoDetail
         }
         helper.setText(R.id.tv_num, (helper.adapterPosition + 1).toString())
         helper.setText(R.id.tv_playCount, "播放次数：" + FormatUtil.formatPlayCount(detail.playCount))
-        CoverLoader.loadImageView(mContext, detail.cover, helper.getView<ImageView>(R.id.iv_cover))
+        CoverLoader.loadImageView(context, detail.cover, helper.getView<ImageView>(R.id.iv_cover))
     }
 }
 
 /**
  *
  */
-class VideoListAdapter(list: List<VideoInfoBean>) : BaseQuickAdapter<VideoInfoBean, BaseViewHolder>(R.layout.item_video_list, list) {
+class VideoListAdapter(list: MutableList<VideoInfoBean>) : BaseQuickAdapter<VideoInfoBean, BaseViewHolder>(R.layout.item_video_list, list),LoadMoreModule {
 
     var playIndex = -1
 
@@ -60,12 +61,12 @@ class VideoListAdapter(list: List<VideoInfoBean>) : BaseQuickAdapter<VideoInfoBe
 
         helper.setVisible(R.id.exo_artwork, true)
 
-        CoverLoader.loadDrawable(mContext, video.coverUrl) { drawable ->
+        CoverLoader.loadDrawable(context, video.coverUrl) { drawable ->
             helper.getView<PlayerView>(R.id.videoView).defaultArtwork = drawable
         }
 
-        CoverLoader.loadImageView(mContext, video.coverUrl, R.drawable.default_cover, helper.getView(R.id.videoCoverIv))
-        LogUtil.d(TAG, "${playIndex != helper.adapterPosition} artwork可见 = ${helper.getView<ImageView>(R.id.exo_artwork).visibility == View.VISIBLE}")
+        CoverLoader.loadImageView(context, video.coverUrl, R.drawable.default_cover, helper.getView(R.id.videoCoverIv))
+        LogUtil.d("TopMVList", "${playIndex != helper.adapterPosition} artwork可见 = ${helper.getView<ImageView>(R.id.exo_artwork).visibility == View.VISIBLE}")
         if (playIndex != helper.adapterPosition) {
             helper.getView<PlayerView>(R.id.videoView).player = null
             helper.setVisible(R.id.tv_playCount, true)
@@ -78,7 +79,7 @@ class VideoListAdapter(list: List<VideoInfoBean>) : BaseQuickAdapter<VideoInfoBe
         if (video.artist.size > 0) {
             val artist = video.artist[0]
             helper.setText(R.id.tv_artist, artist.name)
-            CoverLoader.loadImageView(mContext, artist.picUrl, R.drawable.default_cover, helper.getView<CircleImageView>(R.id.civ_cover))
+            CoverLoader.loadImageView(context, artist.picUrl, R.drawable.default_cover, helper.getView<CircleImageView>(R.id.civ_cover))
         }
 
         helper.getView<View>(R.id.frameLayout).setOnClickListener {

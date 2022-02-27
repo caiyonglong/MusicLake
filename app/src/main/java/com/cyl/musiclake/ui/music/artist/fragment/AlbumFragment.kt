@@ -48,13 +48,12 @@ class AlbumFragment : BaseFragment<AlbumPresenter>(), AlbumsContract.View {
             mAdapter = AlbumAdapter(it)
             recyclerView.layoutManager = androidx.recyclerview.widget.GridLayoutManager(context, 3, androidx.recyclerview.widget.GridLayoutManager.VERTICAL, false);
             recyclerView.adapter = mAdapter
-            mAdapter?.bindToRecyclerView(recyclerView)
         }
     }
 
     public override fun initViews() {
-        artistID = arguments!!.getLong(Extras.ARTIST_ID)
-        transitionName = arguments!!.getString(Extras.TRANSITIONNAME)
+        artistID = arguments?.getLong(Extras.ARTIST_ID) ?: 0L
+        transitionName = arguments?.getString(Extras.TRANSITIONNAME)
         title = arguments?.getString(Extras.PLAYLIST_NAME)
 
     }

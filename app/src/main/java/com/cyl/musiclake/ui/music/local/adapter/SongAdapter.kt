@@ -7,7 +7,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.chad.library.adapter.base.BaseQuickAdapter
-import com.chad.library.adapter.base.BaseViewHolder
+import com.chad.library.adapter.base.module.LoadMoreModule
+import com.chad.library.adapter.base.module.UpFetchModule
+import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
 import com.cyl.musiclake.api.music.MusicApi
@@ -30,19 +32,26 @@ import org.jetbrains.anko.dip
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-class SongAdapter(val musicList: List<Music>) : BaseQuickAdapter<Music, BaseViewHolder>(R.layout.item_music, musicList), FastScrollRecyclerView.SectionedAdapter {
+class SongAdapter(var musicList: MutableList<Music>) : BaseQuickAdapter<Music, BaseViewHolder>(R.layout.item_music, musicList), FastScrollRecyclerView.SectionedAdapter, LoadMoreModule, UpFetchModule {
+
+    private val TAG = "SongAdapter"
+
+    init {
+        addChildClickViewIds(R.id.iv_more)
+    }
+
     override fun convert(holder: BaseViewHolder, item: Music) {
-        CoverLoader.loadImageView(mContext, item.coverUri, holder.getView(R.id.iv_cover))
+        CoverLoader.loadImageView(context, item.coverUri, holder.getView(R.id.iv_cover))
         holder.setText(R.id.tv_title, ConvertUtils.getTitle(item.title))
 
         //音质图标显示
         val quality = when {
-            item.sq -> mContext.resources.getDrawable(R.drawable.sq_icon, null)
-            item.hq -> mContext.resources.getDrawable(R.drawable.hq_icon, null)
+            item.sq -> context.resources.getDrawable(R.drawable.sq_icon, null)
+            item.hq -> context.resources.getDrawable(R.drawable.hq_icon, null)
             else -> null
         }
         quality?.let {
-            quality.setBounds(0, 0, quality.minimumWidth + mContext.dip(2), quality.minimumHeight)
+            quality.setBounds(0, 0, quality.minimumWidth + context.dip(2), quality.minimumHeight)
             holder.getView<TextView>(R.id.tv_artist).setCompoundDrawables(quality, null, null, null)
         }
         //设置歌手专辑名
@@ -50,22 +59,21 @@ class SongAdapter(val musicList: List<Music>) : BaseQuickAdapter<Music, BaseView
         //设置播放状态
         if (PlayManager.getPlayingId() == item.mid) {
             holder.getView<View>(R.id.v_playing).visibility = View.VISIBLE
-            holder.setTextColor(R.id.tv_title, ContextCompat.getColor(mContext, R.color.app_green))
-            holder.setTextColor(R.id.tv_artist, ContextCompat.getColor(mContext, R.color.app_green))
+            holder.setTextColor(R.id.tv_title, ContextCompat.getColor(context, R.color.app_green))
+            holder.setTextColor(R.id.tv_artist, ContextCompat.getColor(context, R.color.app_green))
 
             recyclerView.scrollToPosition(holder.adapterPosition)
         } else {
             holder.getView<View>(R.id.v_playing).visibility = View.GONE
-            holder.setTextColor(R.id.tv_title, ContextCompat.getColor(mContext, R.color.textColorPrimary))
+            holder.setTextColor(R.id.tv_title, ContextCompat.getColor(context, R.color.textColorPrimary))
 
 //            if (ThemeStore.THEME_MODE == ThemeStore.DAY) {
-//                holder.setTextColor(R.id.tv_title, ContextCompat.getColor(mContext, R.color.black))
+//                holder.setTextColor(R.id.tv_title, ContextCompat.getColor(context, R.color.black))
 //            } else {
 //            }
-            holder.setTextColor(R.id.tv_artist, ContextCompat.getColor(mContext, R.color.grey))
+            holder.setTextColor(R.id.tv_artist, ContextCompat.getColor(context, R.color.grey))
         }
 
-        holder.addOnClickListener(R.id.iv_more)
 
         //是否有mv（现只支持百度音乐）
         if (item.hasMv == 1) {
@@ -75,15 +83,15 @@ class SongAdapter(val musicList: List<Music>) : BaseQuickAdapter<Music, BaseView
         }
         //是否可播放
         if (item.isCp) {
-            holder.setTextColor(R.id.tv_title, ContextCompat.getColor(mContext, R.color.grey))
-            holder.setTextColor(R.id.tv_artist, ContextCompat.getColor(mContext, R.color.grey))
+            holder.setTextColor(R.id.tv_title, ContextCompat.getColor(context, R.color.grey))
+            holder.setTextColor(R.id.tv_artist, ContextCompat.getColor(context, R.color.grey))
         }
         val layoutParams = holder.getView<ImageView>(R.id.iv_cover).layoutParams
         //动态改变图片尺寸大小
         if (item.type == Constants.YOUTUBE || item.type == Constants.VIDEO) {
-            layoutParams.width = SizeUtils.dp2px(mContext, 80f)
+            layoutParams.width = SizeUtils.dp2px(context, 80f)
         } else {
-            layoutParams.width = SizeUtils.dp2px(mContext, 45f)
+            layoutParams.width = SizeUtils.dp2px(context, 45f)
         }
         holder.getView<ImageView>(R.id.iv_cover).layoutParams = layoutParams
 
@@ -118,7 +126,7 @@ class SongAdapter(val musicList: List<Music>) : BaseQuickAdapter<Music, BaseView
             }
         }
 //        if (item.coverUri != null) {
-//            CoverLoader.loadImageView(mContext, item.coverUri, holder.getView(R.id.iv_cover))
+//            CoverLoader.loadImageView(context, item.coverUri, holder.getView(R.id.iv_cover))
 //        }
 //        if (item.coverUri.isNullOrEmpty()) {
 //            //加载歌曲专辑图

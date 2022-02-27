@@ -27,10 +27,10 @@ class LocalVideoFragment : BaseFragment<FolderSongPresenter>(), FolderSongsContr
 
     private var mAdapter: SongAdapter? = null
     private var path: String? = null
-    private var musicList: List<Music> = ArrayList()
+    private var musicList: MutableList<Music> = ArrayList()
 
     override fun showEmptyView() {
-        mAdapter?.setEmptyView(R.layout.view_song_empty, mRecyclerView)
+        mAdapter?.setEmptyView(R.layout.view_song_empty)
     }
 
     override fun loadData() {
@@ -47,7 +47,6 @@ class LocalVideoFragment : BaseFragment<FolderSongPresenter>(), FolderSongsContr
         mAdapter = SongAdapter(musicList)
         mRecyclerView?.layoutManager = LinearLayoutManager(activity)
         mRecyclerView?.adapter = mAdapter
-        mAdapter?.bindToRecyclerView(mRecyclerView)
         setHasOptionsMenu(true)
     }
 
@@ -80,9 +79,9 @@ class LocalVideoFragment : BaseFragment<FolderSongPresenter>(), FolderSongsContr
         mAdapter?.setOnItemChildClickListener { adapter, view, position -> BottomDialogFragment.newInstance(musicList[position]).show(mFragmentComponent.activity as AppCompatActivity) }
     }
 
-    override fun showSongs(musicList: List<Music>) {
+    override fun showSongs(musicList: MutableList<Music>) {
         this.musicList = musicList
-        mAdapter?.setNewData(musicList)
+        mAdapter?.setNewInstance(musicList)
         hideLoading()
     }
 

@@ -40,7 +40,6 @@ class ArtistSongsFragment : BaseFragment<ArtistSongsPresenter>(), ArtistSongCont
         mAdapter = SongAdapter(musicInfos)
         recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
         recyclerView.adapter = mAdapter
-        mAdapter?.bindToRecyclerView(recyclerView)
 
         //播放按钮
         playIv?.setOnClickListener {

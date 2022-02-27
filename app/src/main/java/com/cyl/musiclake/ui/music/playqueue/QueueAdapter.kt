@@ -5,7 +5,7 @@ import androidx.palette.graphics.Palette
 import android.view.View
 import androidx.core.content.ContextCompat
 import com.chad.library.adapter.base.BaseQuickAdapter
-import com.chad.library.adapter.base.BaseViewHolder
+import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.cyl.musiclake.R
 import com.cyl.musiclake.common.Constants
 import com.cyl.musiclake.bean.Music
@@ -19,9 +19,13 @@ import com.cyl.musiclake.utils.ConvertUtils
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-class QueueAdapter(musicList: List<Music>) : BaseQuickAdapter<Music, BaseViewHolder>(R.layout.item_queue, musicList) {
+class QueueAdapter(musicList: MutableList<Music>) : BaseQuickAdapter<Music, BaseViewHolder>(R.layout.item_queue, musicList) {
 
     private var mSwatch: androidx.palette.graphics.Palette.Swatch? = null
+
+    init {
+        addChildClickViewIds(R.id.iv_more)
+    }
 
     override fun convert(holder: BaseViewHolder, item: Music) {
         holder.setText(R.id.tv_title, ConvertUtils.getTitle(item.title))
@@ -31,10 +35,9 @@ class QueueAdapter(musicList: List<Music>) : BaseQuickAdapter<Music, BaseViewHol
             holder.setTextColor(R.id.tv_title, Color.parseColor("#0091EA"))
             holder.setTextColor(R.id.tv_artist, Color.parseColor("#01579B"))
         } else {
-            holder.setTextColor(R.id.tv_title, ContextCompat.getColor(mContext, R.color.textColorPrimary))
-            holder.setTextColor(R.id.tv_artist, ContextCompat.getColor(mContext, R.color.textColorSecondary))
+            holder.setTextColor(R.id.tv_title, ContextCompat.getColor(context, R.color.textColorPrimary))
+            holder.setTextColor(R.id.tv_artist, ContextCompat.getColor(context, R.color.textColorSecondary))
         }
-        holder.addOnClickListener(R.id.iv_more)
         if (item.type == Constants.LOCAL) {
             holder.getView<View>(R.id.iv_resource).visibility = View.GONE
         } else {

@@ -41,7 +41,6 @@ class PlaylistFragment : BaseLazyFragment<PlaylistPresenter>(), PlaylistContract
             recyclerView?.adapter = mNeteaseAdapter
             recyclerView?.isFocusable = false
             recyclerView?.isNestedScrollingEnabled = false
-            mNeteaseAdapter?.bindToRecyclerView(recyclerView)
             mNeteaseAdapter?.setOnItemClickListener { adapter, view, position ->
                 val playlist = adapter.data[position] as Playlist
                 NavigationHelper.navigateToPlaylist(mFragmentComponent.activity, playlist, Pair(view.findViewById(R.id.iv_cover), getString(R.string.transition_album)))

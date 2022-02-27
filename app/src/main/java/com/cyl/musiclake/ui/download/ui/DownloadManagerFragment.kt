@@ -60,7 +60,7 @@ class DownloadManagerFragment : BaseFragment<DownloadPresenter>(), DownloadContr
 
     }
 
-    override fun showSongs(musicList: List<Music>) {
+    override fun showSongs(musicList: MutableList<Music>) {
 
     }
 

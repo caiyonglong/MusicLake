@@ -76,19 +76,18 @@ public class MvSearchListFragment extends BaseLazyFragment<MvListPresenter> impl
     public void initViews() {
         //适配器
         mAdapter = new TopMvListAdapter(mvList);
-        mAdapter.bindToRecyclerView(mRecyclerView);
         //初始化列表
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
 
-        mAdapter.setEnableLoadMore(true);
-        mAdapter.setOnLoadMoreListener(() -> mRecyclerView.postDelayed(() -> {
+        mAdapter.getLoadMoreModule().setEnableLoadMore(true);
+        mAdapter.getLoadMoreModule().setOnLoadMoreListener(() -> mRecyclerView.postDelayed(() -> {
             //成功获取更多数据
             if (mPresenter != null) {
                 mPresenter.searchMv(searchInfo, mvList.size());
             }
-        }, 1000), mRecyclerView);
+        }, 1000));
 
         mRecyclerView.setAdapter(mAdapter);
     }

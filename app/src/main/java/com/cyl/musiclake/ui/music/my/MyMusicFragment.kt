@@ -77,7 +77,6 @@ class MyMusicFragment : BaseFragment<MyMusicPresenter>(), MyMusicContract.View {
 
         mAdapter = PlaylistAdapter(playlists)
         playlistRcv.adapter = mAdapter
-        mAdapter?.bindToRecyclerView(playlistRcv)
         mAdapter?.setEmptyView(R.layout.view_playlist_empty)
 
         //加载通知

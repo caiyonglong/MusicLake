@@ -13,10 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
-import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
+import com.chad.library.adapter.base.dragswipe.DragAndSwipeCallback;
 import com.chad.library.adapter.base.listener.OnItemDragListener;
 import com.chad.library.adapter.base.listener.OnItemSwipeListener;
+import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.bean.Music;
 import com.cyl.musiclake.common.Constants;
@@ -67,23 +67,22 @@ public class PlayQueueFragment extends BaseFragment<PlayQueuePresenter> implemen
         }
 
         mAdapter = new PlayQueueAdapter(musicInfos);
-        mAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
+        mAdapter.setAnimationWithDefault(BaseQuickAdapter.AnimationType.SlideInLeft);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAdapter);
-        mAdapter.bindToRecyclerView(mRecyclerView);
 
-        ItemDragAndSwipeCallback itemDragAndSwipeCallback = new ItemDragAndSwipeCallback(mAdapter);
+        ItemTouchHelper.Callback itemDragAndSwipeCallback = new DragAndSwipeCallback(mAdapter.getDraggableModule());
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemDragAndSwipeCallback);
         itemTouchHelper.attachToRecyclerView(mRecyclerView);
 
 
         // 开启拖拽
-        mAdapter.enableDragItem(itemTouchHelper);
-        mAdapter.setOnItemDragListener(onItemDragListener);
+        mAdapter.getDraggableModule().setItemTouchHelper(itemTouchHelper);
+        mAdapter.getDraggableModule().setOnItemDragListener(onItemDragListener);
 
         // 开启滑动删除
-        mAdapter.enableSwipeItem();
-        mAdapter.setOnItemSwipeListener(onItemSwipeListener);
+        mAdapter.getDraggableModule().setSwipeEnabled(true);
+        mAdapter.getDraggableModule().setOnItemSwipeListener(onItemSwipeListener);
 
 
     }

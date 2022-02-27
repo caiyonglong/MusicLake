@@ -2,7 +2,7 @@
 
 buildscript {
     ext.anko_version = '0.10.8'
-    ext.kotlin_version = '1.5.21'
+    ext.kotlin_version = '1.6.10'
     ext.retrofit_version = '2.4.0'
     repositories {
         //阿里云镜像
@@ -18,7 +18,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.2.2'
+        classpath 'com.android.tools.build:gradle:7.0.4'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files

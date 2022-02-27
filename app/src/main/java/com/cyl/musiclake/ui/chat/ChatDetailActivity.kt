@@ -32,7 +32,6 @@ class ChatDetailActivity : BaseActivity<ChatPresenter>() {
         usersRsv.adapter = mUserAdapter
         usersRsv.isNestedScrollingEnabled = false
         usersRsv.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
-        mUserAdapter?.bindToRecyclerView(usersRsv)
         onlineUserTv.text = getString(R.string.online_users,SocketManager.onlineUsers.size)
     }
 

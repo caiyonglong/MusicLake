@@ -2,7 +2,7 @@ package com.cyl.musiclake.ui.chat
 
 import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
-import com.chad.library.adapter.base.BaseViewHolder
+import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.cyl.musicapi.playlist.MusicInfo
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
@@ -21,7 +21,7 @@ import com.cyl.musiclake.utils.CoverLoader
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-class ChatListAdapter(val list: List<MessageInfoBean>) : BaseQuickAdapter<MessageInfoBean, BaseViewHolder>(R.layout.item_chat, list) {
+class ChatListAdapter(val list: MutableList<MessageInfoBean>) : BaseQuickAdapter<MessageInfoBean, BaseViewHolder>(R.layout.item_chat, list){
 
     override fun convert(holder: BaseViewHolder, item: MessageInfoBean) {
         holder.setText(R.id.tv_comment_user, item.userInfo?.nickname ?: "")
@@ -36,7 +36,7 @@ class ChatListAdapter(val list: List<MessageInfoBean>) : BaseQuickAdapter<Messag
         }
 
         holder.setText(R.id.tv_comment_content, item.message)
-        CoverLoader.loadImageView(mContext, item.userInfo?.avatar, holder.getView(R.id.civ_cover))
+        CoverLoader.loadImageView(context, item.userInfo?.avatar, holder.getView(R.id.civ_cover))
         if (item.type == SocketManager.MESSAGE_BROADCAST) {
             holder.getView<View>(R.id.tv_comment_content).visibility = View.VISIBLE
             holder.getView<View>(R.id.include_music).visibility = View.GONE
@@ -72,13 +72,13 @@ class ChatListAdapter(val list: List<MessageInfoBean>) : BaseQuickAdapter<Messag
                         }
                     }
                     if (music.coverUri != null) {
-                        CoverLoader.loadImageView(mContext, music.coverUri, holder.getView(R.id.iv_cover))
+                        CoverLoader.loadImageView(context, music.coverUri, holder.getView(R.id.iv_cover))
                     }
                     holder.getView<View>(R.id.include_music).setOnClickListener {
                         PlayManager.playOnline(music)
                     }
                     holder.getView<View>(R.id.iv_more).setOnClickListener {
-                        BottomDialogFragment.newInstance(music).show(mContext as ChatActivity)
+                        BottomDialogFragment.newInstance(music).show(context as ChatActivity)
                     }
                 }
             }
@@ -87,9 +87,9 @@ class ChatListAdapter(val list: List<MessageInfoBean>) : BaseQuickAdapter<Messag
 
 }
 
-class OnlineUserListAdapter(list: List<UserInfoBean>) : BaseQuickAdapter<UserInfoBean, BaseViewHolder>(R.layout.item_user, list) {
+class OnlineUserListAdapter(list: MutableList<UserInfoBean>) : BaseQuickAdapter<UserInfoBean, BaseViewHolder>(R.layout.item_user, list) {
     override fun convert(helper: BaseViewHolder, item: UserInfoBean) {
-        CoverLoader.loadImageView(mContext, item.avatar, helper.getView(R.id.user_avatar))
+        CoverLoader.loadImageView(context, item.avatar, helper.getView(R.id.user_avatar))
         helper.setText(R.id.user_name, item.nickname)
         helper.setText(R.id.user_name, item.nickname)
         when {

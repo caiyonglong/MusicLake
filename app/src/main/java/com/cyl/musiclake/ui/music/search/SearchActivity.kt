@@ -222,7 +222,6 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
             layoutManager.justifyContent = JustifyContent.FLEX_START
             hotSearchRcv.layoutManager = layoutManager
             hotSearchRcv.adapter = hotSearchAdapter
-            hotSearchAdapter?.bindToRecyclerView(hotSearchRcv)
             hotSearchAdapter?.setOnItemClickListener { _, _, _ -> }
             hotSearchAdapter?.setOnItemChildClickListener { _, view, position ->
                 if (view.id == R.id.titleTv) {
@@ -245,7 +244,6 @@ class SearchActivity : BaseActivity<SearchPresenter>(), SearchContract.View {
             historyAdapter = SearchHistoryAdapter(searchHistory)
             historyRcv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
             historyRcv.adapter = historyAdapter
-            historyAdapter?.bindToRecyclerView(historyRcv)
             historyAdapter?.setOnItemLongClickListener { _, _, _ -> false }
             historyAdapter?.setOnItemClickListener { _, _, _ -> }
             historyAdapter?.setOnItemChildClickListener { _, view, position ->

@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
-import com.chad.library.adapter.base.BaseViewHolder
+import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.chad.library.adapter.base.entity.MultiItemEntity
 import com.cyl.musicapi.netease.BannerBean
 import com.cyl.musiclake.R
@@ -29,21 +29,20 @@ class DiscoverAdapter(data: MutableList<DiscoverEntry>?) : BaseMultiItemQuickAda
         addItemType(DiscoverEntry.DISCOVER_RECOMMEND_PLAYLIST, R.layout.frag_discover_recommend_playlist)
     }
 
-    override fun convert(helper: BaseViewHolder?, item: DiscoverEntry?) {
+    override fun convert(helper: BaseViewHolder, item: DiscoverEntry) {
         if (item is DiscoverBannerBean) {
-            helper?.getView<MZBannerView<BannerBean>>(R.id.mzBannerView)?.setPages(item?.data) { BannerViewHolder(mContext as Activity) }
+            helper?.getView<MZBannerView<BannerBean>>(R.id.mzBannerView)?.setPages(item?.data) { BannerViewHolder(context as Activity) }
         } else if (item is DiscoverHotSingerBean) {
             if (mArtistListAdapter == null) {
-                helper?.getView<RecyclerView>(R.id.chartsArtistRcv)?.layoutManager = GridLayoutManager(mContext, 2, LinearLayoutManager.HORIZONTAL, false)
+                helper?.getView<RecyclerView>(R.id.chartsArtistRcv)?.layoutManager = GridLayoutManager(context, 2, LinearLayoutManager.HORIZONTAL, false)
                 //适配器
                 mArtistListAdapter = TopArtistListAdapter(item.data)
                 helper?.getView<RecyclerView>(R.id.chartsArtistRcv)?.adapter = mArtistListAdapter
                 helper?.getView<RecyclerView>(R.id.chartsArtistRcv)?.isFocusable = false
                 helper?.getView<RecyclerView>(R.id.chartsArtistRcv)?.isNestedScrollingEnabled = false
-                mArtistListAdapter?.bindToRecyclerView(helper?.getView<RecyclerView>(R.id.chartsArtistRcv))
                 mArtistListAdapter?.setOnItemClickListener { adapter, view, position ->
                     val artist = adapter.data[position] as Artist
-                    NavigationHelper.navigateToArtist(mContext as Activity, artist, Pair<View, String>(view.findViewById<View>(R.id.iv_cover), mContext.getString(R.string.transition_album)))
+                    NavigationHelper.navigateToArtist(context as Activity, artist, Pair<View, String>(view.findViewById<View>(R.id.iv_cover), context.getString(R.string.transition_album)))
                 }
             } else {
                 mArtistListAdapter?.setNewData(item.data)

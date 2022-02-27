@@ -7,7 +7,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
-import com.chad.library.adapter.base.BaseViewHolder
+import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.cyl.musicapi.netease.BannerBean
 import com.cyl.musiclake.MusicApp
 import com.cyl.musiclake.R
@@ -31,7 +31,7 @@ import org.jetbrains.anko.startActivity
  * 邮箱：643872807@qq.com
  * 版本：2.5
  */
-class TopListAdapter(list: List<Playlist>) : BaseQuickAdapter<Playlist, BaseViewHolder>(R.layout.item_top_list, list) {
+class TopListAdapter(list: MutableList<Playlist>) : BaseQuickAdapter<Playlist, BaseViewHolder>(R.layout.item_top_list, list) {
 
     override fun convert(helper: BaseViewHolder, neteaseList: Playlist) {
         if (neteaseList.name == null)
@@ -43,18 +43,18 @@ class TopListAdapter(list: List<Playlist>) : BaseQuickAdapter<Playlist, BaseView
             Constants.PLAYLIST_WY_ID -> MusicUtils.getAlbumPic(neteaseList.coverUrl, Constants.NETEASE, PIC_SIZE_NORMAL)
             else -> neteaseList.coverUrl
         }
-        CoverLoader.loadImageView(mContext, url, helper.getView(R.id.iv_cover))
+        CoverLoader.loadImageView(context, url, helper.getView(R.id.iv_cover))
     }
 }
 
-class TopPlaylistAdapter(list: List<Playlist>) : BaseQuickAdapter<Playlist, BaseViewHolder>(R.layout.item_play_list, list) {
+class TopPlaylistAdapter(list: MutableList<Playlist>) : BaseQuickAdapter<Playlist, BaseViewHolder>(R.layout.item_play_list, list) {
 
     override fun convert(helper: BaseViewHolder, playlist: Playlist) {
         val url = when (playlist.type) {
             Constants.PLAYLIST_WY_ID -> MusicUtils.getAlbumPic(playlist.coverUrl, Constants.NETEASE, PIC_SIZE_NORMAL)
             else -> playlist.coverUrl
         }
-        CoverLoader.loadImageView(mContext, url, helper.getView(R.id.iv_cover))
+        CoverLoader.loadImageView(context, url, helper.getView(R.id.iv_cover))
         helper.setText(R.id.tv_title, playlist.name)
         helper.setText(R.id.tv_playCount, "播放次数：${playlist.playCount}")
     }
@@ -111,11 +111,11 @@ class BannerViewHolder(val activity: Activity) : MZViewHolder<BannerBean> {
 }
 
 
-class PlaylistAdapter(playlists: List<Playlist>) : BaseQuickAdapter<Playlist, BaseViewHolder>(R.layout.item_playlist, playlists) {
+class PlaylistAdapter(playlists: MutableList<Playlist>) : BaseQuickAdapter<Playlist, BaseViewHolder>(R.layout.item_playlist, playlists) {
 
     override fun convert(helper: BaseViewHolder, playlist: Playlist) {
         helper.setText(R.id.tv_name, playlist.name)
-        CoverLoader.loadImageView(mContext, playlist.coverUrl, helper.getView(R.id.iv_cover))
+        CoverLoader.loadImageView(context, playlist.coverUrl, helper.getView(R.id.iv_cover))
         helper.setText(R.id.tv_num, playlist.musicList.size.toString() + "首")
     }
 }

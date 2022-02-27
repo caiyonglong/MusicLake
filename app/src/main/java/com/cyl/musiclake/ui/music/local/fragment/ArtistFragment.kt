@@ -50,7 +50,6 @@ class ArtistFragment : BaseLazyFragment<ArtistPresenter>(), ArtistContract.View 
         mAdapter = ArtistAdapter(artists)
         recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         recyclerView.adapter = mAdapter
-        mAdapter?.bindToRecyclerView(recyclerView)
     }
 
     override fun initInjector() {
@@ -72,8 +71,8 @@ class ArtistFragment : BaseLazyFragment<ArtistPresenter>(), ArtistContract.View 
         super.hideLoading()
     }
 
-    override fun showArtists(artists: List<Artist>) {
-        mAdapter?.setNewData(artists)
+    override fun showArtists(artists: MutableList<Artist>) {
+        mAdapter?.setNewInstance(artists)
         hideLoading()
     }
 
@@ -93,7 +92,7 @@ class ArtistFragment : BaseLazyFragment<ArtistPresenter>(), ArtistContract.View 
     }
 
     override fun showEmptyView() {
-        mAdapter?.setEmptyView(R.layout.view_song_empty, recyclerView)
+        mAdapter?.setEmptyView(R.layout.view_song_empty)
     }
 
     companion object {

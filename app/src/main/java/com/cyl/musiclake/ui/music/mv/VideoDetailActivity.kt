@@ -58,7 +58,7 @@ class VideoDetailActivity : BaseActivity<VideoDetailPresenter?>(), VideoDetailCo
         initData()
     }
 
-    override fun showVideoInfoList(mvList: List<VideoInfoBean>) {
+    override fun showVideoInfoList(mvList: MutableList<VideoInfoBean>) {
     }
 
     override fun showBaiduMvDetailInfo(mvInfoBean: MvInfoBean?) {}

@@ -2,18 +2,19 @@ package com.cyl.musiclake.ui.music.discover;
 
 import android.os.Bundle;
 import android.os.Parcelable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Pair;
 import android.view.View;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.cyl.musiclake.R;
-import com.cyl.musiclake.ui.base.BaseFragment;
 import com.cyl.musiclake.bean.Artist;
 import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.common.Constants;
 import com.cyl.musiclake.common.Extras;
 import com.cyl.musiclake.common.NavigationHelper;
+import com.cyl.musiclake.ui.base.BaseFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,7 +87,6 @@ public class AllListFragment extends BaseFragment {
             //适配器
             mArtistAdapter = new ArtistListAdapter(artistList);
             mRecyclerView.setAdapter(mArtistAdapter);
-            mArtistAdapter.bindToRecyclerView(mRecyclerView);
 
             mArtistAdapter.setOnItemClickListener((adapter, view, position) -> {
                 Artist artist = (Artist) adapter.getData().get(position);
@@ -96,7 +96,6 @@ public class AllListFragment extends BaseFragment {
             //适配器
             mPlaylistAdapter = new PlaylistAdapter(playlistList);
             mRecyclerView.setAdapter(mArtistAdapter);
-            mPlaylistAdapter.bindToRecyclerView(mRecyclerView);
 
             mPlaylistAdapter.setOnItemClickListener((adapter, view, position) -> {
                 NavigationHelper.INSTANCE.navigateToPlaylist(mFragmentComponent.getActivity(), playlistList.get(position), null);

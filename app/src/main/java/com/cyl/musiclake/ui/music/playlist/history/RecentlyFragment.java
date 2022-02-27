@@ -65,10 +65,9 @@ public class RecentlyFragment extends BaseFragment<RecentlyPresenter> implements
         }
 
         mAdapter = new SongAdapter(musicInfos);
-        mAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
+        mAdapter.setAnimationWithDefault(BaseQuickAdapter.AnimationType.SlideInLeft);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAdapter);
-        mAdapter.bindToRecyclerView(mRecyclerView);
 
     }
 

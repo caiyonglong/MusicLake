@@ -63,7 +63,6 @@ class FoldersFragment : BaseLazyFragment<FoldersPresenter>(), FoldersContract.Vi
             this.folderInfos = folderInfos
             mAdapter = FolderAdapter(folderInfos)
             recyclerView?.adapter = mAdapter
-            mAdapter?.bindToRecyclerView(recyclerView)
             mAdapter?.setOnItemClickListener { adapter, _, position ->
                 //打开文件夹
                 val folderInfo = adapter.getItem(position) as FolderInfo?
@@ -87,7 +86,6 @@ class FoldersFragment : BaseLazyFragment<FoldersPresenter>(), FoldersContract.Vi
                 SongAdapter(it)
             }
             recyclerView?.adapter = mSongAdapter
-            mSongAdapter?.bindToRecyclerView(recyclerView)
             mSongAdapter?.setOnItemClickListener { adapter, view, position ->
                 if (view.id != R.id.iv_more) {
                     PlayManager.play(position, songList, Constants.PLAYLIST_DOWNLOAD_ID + curFolderName)

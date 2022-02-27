@@ -151,7 +151,6 @@ class ImportPlaylistActivity : BaseActivity<BasePresenter<BaseContract.BaseView>
         this.name = result.name
         resultRsv.adapter = mAdapter
         resultRsv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
-        mAdapter?.bindToRecyclerView(resultRsv)
 
         mAdapter?.setOnItemClickListener { adapter, view, position ->
             if (view.id != R.id.iv_more) {

@@ -5,30 +5,21 @@ import com.cyl.musiclake.bean.Artist
 import com.cyl.musiclake.ui.music.discover.DiscoverEntry
 
 class DiscoverBannerBean(var data: MutableList<BannerBean>) : DiscoverEntry {
-
-    override fun getItemType(): Int {
-        return DiscoverEntry.DISCOVER_BANNER
-    }
-
+    override val itemType: Int
+        get() = DiscoverEntry.DISCOVER_BANNER
 }
 
 class DiscoverOtherBean() : DiscoverEntry {
-
-    override fun getItemType(): Int {
-        return DiscoverEntry.DISCOVER_OTHER
-    }
+    override val itemType: Int
+        get() = DiscoverEntry.DISCOVER_OTHER
 }
 
 class DiscoverHotSingerBean(var data: MutableList<Artist>) : DiscoverEntry {
-
-    override fun getItemType(): Int {
-        return DiscoverEntry.DISCOVER_BANNER
-    }
+    override val itemType: Int
+        get() = DiscoverEntry.DISCOVER_BANNER
 }
 
 class DiscoverRecommendPlaylistBean(var data: MutableList<Artist>) : DiscoverEntry {
-
-    override fun getItemType(): Int {
-        return DiscoverEntry.DISCOVER_RECOMMEND_PLAYLIST
-    }
+    override val itemType: Int
+        get() = DiscoverEntry.DISCOVER_RECOMMEND_PLAYLIST
 }

@@ -47,12 +47,11 @@ abstract class BasePlaylistActivity : BaseActivity<PlaylistPresenter>(), Playlis
 
     override fun initView() {
         mAdapter = SongAdapter(musicList)
-        mAdapter?.setEnableLoadMore(setEnableMore())
+//        mAdapter?.setEnableLoadMore(setEnableMore())
         val layoutManager = LinearLayoutManager(this)
         layoutManager.orientation = RecyclerView.VERTICAL
         recyclerView?.layoutManager = layoutManager
         recyclerView?.adapter = mAdapter
-        mAdapter?.bindToRecyclerView(recyclerView)
     }
 
     override fun setToolbarTitle(): String? {
@@ -126,7 +125,7 @@ abstract class BasePlaylistActivity : BaseActivity<PlaylistPresenter>(), Playlis
     }
 
     override fun showPlayList(playlist: Playlist) {
-        mAdapter?.setEnableLoadMore(false)
+//        mAdapter?.setEnableLoadMore(false)
         mPlaylist = playlist
         musicList = playlist.musicList
         showHeaderInfo(playlist)
@@ -139,7 +138,7 @@ abstract class BasePlaylistActivity : BaseActivity<PlaylistPresenter>(), Playlis
         mOffset += limit
         mCurrentCounter = mAdapter?.data?.size ?: 0
         TOTAL_COUNTER = mOffset
-        mAdapter?.loadMoreComplete()
+//        mAdapter?.loadMoreComplete()
     }
 
     override fun showNeteaseCharts(playlistList: MutableList<Playlist>?) {

@@ -35,8 +35,8 @@ class EditSongListActivity : BaseActivity<EditSongListPresenter>() {
 
     override fun initView() {
         mAdapter = EditSongAdapter(musicList)
-        recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
-        mAdapter?.bindToRecyclerView(recyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        mAdapter.also { recyclerView.adapter = it }
     }
 
     override fun initData() {

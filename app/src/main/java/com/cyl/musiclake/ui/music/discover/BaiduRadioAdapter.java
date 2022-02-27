@@ -1,7 +1,7 @@
 package com.cyl.musiclake.ui.music.discover;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
+import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.cyl.musiclake.R;
 import com.cyl.musiclake.bean.Playlist;
 import com.cyl.musiclake.utils.CoverLoader;
@@ -23,7 +23,7 @@ public class BaiduRadioAdapter extends BaseQuickAdapter<Playlist, BaseViewHolder
     protected void convert(BaseViewHolder helper, Playlist channel) {
         helper.setText(R.id.title, channel.getName());
         helper.setVisible(R.id.title, true);
-        CoverLoader.INSTANCE.loadImageView(mContext, channel.getCoverUrl(), helper.getView(R.id.iv_cover));
+        CoverLoader.INSTANCE.loadImageView(getContext(), channel.getCoverUrl(), helper.getView(R.id.iv_cover));
     }
 
 }

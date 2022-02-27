@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.DialogCallback
 import com.afollestad.materialdialogs.MaterialDialog
+import com.chad.library.adapter.base.BaseQuickAdapter
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.MessageInfoBean
 import com.cyl.musiclake.bean.UserInfoBean
@@ -167,10 +168,6 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
             true
         }
         mSwipeRefreshLayout?.isEnabled = true
-        mAdapter?.isUpFetchEnable = true
-        mAdapter?.setUpFetchListener {
-            startUpFetch()
-        }
         SocketManager.addSocketListener(listener)
     }
 
@@ -181,7 +178,6 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
         /**
          * set fetching on when start network request.
          */
-        mAdapter?.isUpFetching = true
         /**
          * get data from internet.
          */
@@ -236,7 +232,7 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
      */
     override fun showMessages(msgList: MutableList<MessageInfoBean>) {
         messages = msgList
-        mAdapter?.setNewData(messages)
+        mAdapter?.setNewInstance(messages)
         messageRsv?.smoothScrollToPosition(messages.size)
     }
 
@@ -249,11 +245,9 @@ class ChatActivity : BaseActivity<ChatPresenter>(), ChatContract.View {
         mAdapter?.notifyDataSetChanged()
         hideLoading()
         messageRsv?.smoothScrollToPosition(msgList.size)
-        mAdapter?.isUpFetching = false
         mSwipeRefreshLayout?.isRefreshing = false
         if (msgList.size == 0) {
             mSwipeRefreshLayout?.isEnabled = false
-            mAdapter?.isUpFetchEnable = false
         }
     }
 

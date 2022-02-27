@@ -3,6 +3,8 @@ package com.cyl.musiclake.ui.music.search.fragment
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.listener.OnLoadMoreListener
+import com.chad.library.adapter.base.module.LoadMoreModule
 import com.cyl.musiclake.R
 import com.cyl.musiclake.bean.HotSearchBean
 import com.cyl.musiclake.bean.Music
@@ -27,10 +29,12 @@ import kotlinx.android.synthetic.main.fragment_recyclerview_notoolbar.*
 class SearchSongsFragment : BaseLazyFragment<SearchPresenter>(), SearchContract.View {
 
     private var mAdapter: SongAdapter? = null
+
     /**
      * 歌曲列表
      */
     private val musicList = mutableListOf<Music>()
+
     /**
      * 分页偏移量
      */
@@ -44,12 +48,12 @@ class SearchSongsFragment : BaseLazyFragment<SearchPresenter>(), SearchContract.
 
 
     //上拉加载更多监听事件
-    val listener = BaseQuickAdapter.RequestLoadMoreListener {
+    val listener = OnLoadMoreListener {
         recyclerView.postDelayed({
             LogUtil.d(TAG, "mCurrentCounter=$mCurrentCounter")
             if (mCurrentCounter == 0) {
                 //数据全部加载完毕
-                mAdapter?.loadMoreEnd()
+                mAdapter?.loadMoreModule?.loadMoreEnd()
             } else {
                 //成功获取更多数据
                 mPresenter?.search(searchInfo, type, limit, mOffset)
@@ -108,8 +112,7 @@ class SearchSongsFragment : BaseLazyFragment<SearchPresenter>(), SearchContract.
             mAdapter = SongAdapter(musicList)
             recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
             recyclerView.adapter = mAdapter
-            mAdapter?.bindToRecyclerView(recyclerView)
-            mAdapter?.setOnLoadMoreListener(listener, recyclerView)
+            mAdapter?.loadMoreModule?.setOnLoadMoreListener(listener)
 
             mAdapter?.setOnItemClickListener { _, view, position ->
                 if (musicList.size <= position) return@setOnItemClickListener
@@ -130,16 +133,14 @@ class SearchSongsFragment : BaseLazyFragment<SearchPresenter>(), SearchContract.
         if (list.size != 0) {
             mOffset++
         } else {
-            mAdapter?.loadMoreComplete()
-            mAdapter?.setEnableLoadMore(false)
+            mAdapter?.loadMoreModule?.loadMoreComplete()
         }
         //更新歌曲列表
         updateMusicList(list)
 
         mCurrentCounter = list.size
         if (musicList.size == 0) {
-            mAdapter?.loadMoreComplete()
-            mAdapter?.setEnableLoadMore(false)
+            mAdapter?.loadMoreModule?.loadMoreComplete()
             showEmptyState()
         }
     }

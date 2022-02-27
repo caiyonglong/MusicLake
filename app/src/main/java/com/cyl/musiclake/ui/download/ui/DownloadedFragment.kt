@@ -34,7 +34,7 @@ class DownloadedFragment : BaseFragment<DownloadPresenter>(), DownloadContract.V
 
     private var mAdapter: SongAdapter? = null
     private var isCache: Boolean? = null
-    private var musicList: List<Music> = ArrayList()
+    private var musicList: MutableList<Music> = ArrayList()
 
     override fun listener() {
         mAdapter?.setOnItemClickListener { adapter, view, position ->
@@ -67,7 +67,6 @@ class DownloadedFragment : BaseFragment<DownloadPresenter>(), DownloadContract.V
         mAdapter = SongAdapter(musicList)
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = mAdapter
-        mAdapter?.bindToRecyclerView(recyclerView)
     }
 
     override fun initInjector() {
@@ -92,11 +91,11 @@ class DownloadedFragment : BaseFragment<DownloadPresenter>(), DownloadContract.V
         return super.onOptionsItemSelected(item)
     }
 
-    override fun showSongs(musicList: List<Music>) {
+    override fun showSongs(musicList: MutableList<Music>) {
         this.musicList = musicList
-        mAdapter?.setNewData(musicList)
+        mAdapter?.setNewInstance(musicList)
         if (musicList.isEmpty()) {
-            mAdapter?.setEmptyView(R.layout.view_song_empty, recyclerView)
+            mAdapter?.setEmptyView(R.layout.view_song_empty)
         }
     }
 

@@ -105,7 +105,6 @@ class QQArtistListFragment : BaseFragment<ArtistListPresenter>(), ArtistListCont
         //适配器
         mArtistAdapter = ArtistListAdapter(artistList)
         resultRsv.adapter = mArtistAdapter
-        mArtistAdapter?.bindToRecyclerView(resultRsv)
         mArtistAdapter?.setOnItemClickListener { adapter, view, position ->
             val artist = adapter.data[position] as Artist
             NavigationHelper.navigateToArtist(mFragmentComponent.activity, artist, Pair(view.findViewById(R.id.iv_cover), getString(R.string.transition_album)))
@@ -122,16 +121,12 @@ class QQArtistListFragment : BaseFragment<ArtistListPresenter>(), ArtistListCont
             singerTag = tags
 
             areaRsv.adapter = areaListAdapter
-            areaListAdapter?.bindToRecyclerView(areaRsv)
 
             indexRsv.adapter = indexListAdapter
-            indexListAdapter?.bindToRecyclerView(indexRsv)
 
             sexRsv.adapter = sexListAdapter
-            sexListAdapter?.bindToRecyclerView(sexRsv)
 
             genreRsv.adapter = genreListAdapter
-            genreListAdapter?.bindToRecyclerView(genreRsv)
 
             areaListAdapter?.setOnItemClickListener { _, _, position ->
                 areaListAdapter?.position = position
