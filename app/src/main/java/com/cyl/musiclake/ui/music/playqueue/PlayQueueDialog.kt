@@ -43,6 +43,7 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        dialog?.requestWindowFeature(Window.FEATURE_NO_TITLE)
         super.onCreate(savedInstanceState)
         mPresenter = PlayQueuePresenter()
         mPresenter?.attachView(this)
@@ -77,7 +78,6 @@ class PlayQueueDialog : BottomSheetDialogFragment(), PlayQueueContract.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        dialog?.requestWindowFeature(Window.FEATURE_NO_TITLE)
     }
 
     private fun initListener() {

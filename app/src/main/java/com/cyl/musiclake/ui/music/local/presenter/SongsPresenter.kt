@@ -3,6 +3,7 @@ package com.cyl.musiclake.ui.music.local.presenter
 import com.cyl.musiclake.ui.base.BasePresenter
 import com.cyl.musiclake.data.SongLoader
 import com.cyl.musiclake.ui.music.local.contract.SongsContract
+import kotlinx.coroutines.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import javax.inject.Inject
@@ -17,9 +18,12 @@ constructor() : BasePresenter<SongsContract.View>(), SongsContract.Presenter {
 
     override fun loadSongs(isReload: Boolean) {
         mView?.showLoading()
-        doAsync {
-            val data = SongLoader.getLocalMusic(mView.context, isReload)
-            uiThread {
+        GlobalScope.launch {
+            val data = async {
+                SongLoader.getLocalMusic(mView.context, isReload)
+            }.await()
+            //主线程更新
+            withContext(Dispatchers.Main) {
                 mView?.hideLoading()
                 mView?.showSongs(data)
                 if (data.size == 0) {

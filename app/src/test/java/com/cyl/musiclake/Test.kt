@@ -2,12 +2,16 @@ package com.cyl.musiclake
 
 import com.cyl.musiclake.bean.Album
 import com.cyl.musiclake.utils.FormatUtil
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException
 import org.jaudiotagger.audio.mp3.MP3File
 import org.jaudiotagger.tag.TagException
 import org.jaudiotagger.tag.id3.AbstractID3v2Frame
 import org.jaudiotagger.tag.id3.framebody.*
+import org.junit.Test
 import java.io.IOException
 
 
@@ -164,5 +168,15 @@ class Test {
         getPlaylistId("分享Aphasia_L创建的歌单「华语｜我是成年人 但还是好想哭」: http://music.163.com/playlist/2342878641/36193129/?userid=61615691 (来自@网易云音乐)")
     }
 
+    @Test
+    fun testCoroutines() {
+        //测试协程
+        GlobalScope.launch {
+            delay(1000L) // 非阻塞的等待 1 秒钟（默认时间单位是毫秒）
+            println("World!") // 在延迟后打印输出
+        }
+        println("Hello,") // 协程已在等待时主线程还在继续
+        Thread.sleep(2000L) // 阻塞主线程 2 秒钟来保证 JVM 存活
+    }
 
 }

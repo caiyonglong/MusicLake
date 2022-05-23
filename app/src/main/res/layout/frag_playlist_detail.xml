@@ -79,7 +79,6 @@
                 android:paddingTop="@dimen/dp_8" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <fragment

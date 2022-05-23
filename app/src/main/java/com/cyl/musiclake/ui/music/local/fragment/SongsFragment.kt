@@ -91,9 +91,9 @@ class SongsFragment : BaseLazyFragment<SongsPresenter>(), SongsContract.View {
 
     private fun initHeaderView() {
         songNumTv?.text = getString(R.string.random_play_num, musicList.size)
-        if (musicList.size == 0) {
-            setEmptyView()
-        }
+//        if (musicList.size == 0) {
+//            setEmptyView()
+//        }
     }
 
     override fun showSongs(songList: MutableList<Music>) {

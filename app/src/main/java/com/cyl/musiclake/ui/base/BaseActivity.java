@@ -1,5 +1,8 @@
 package com.cyl.musiclake.ui.base;
 
+import static com.cyl.musiclake.player.PlayManager.mService;
+import static com.cyl.musiclake.utils.AnimationUtils.animateView;
+
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -18,6 +21,7 @@ import android.view.View;
 import android.view.ViewStub;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -53,9 +57,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.reactivex.disposables.Disposable;
-
-import static com.cyl.musiclake.player.PlayManager.mService;
-import static com.cyl.musiclake.utils.AnimationUtils.animateView;
 
 /**
  * 基类
@@ -106,10 +107,14 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
         mToken = PlayManager.bindToService(this, this);
+
         setContentView(R.layout.activity_base);
-        View view = LayoutInflater.from(this).inflate(getLayoutResID(), findViewById(R.id.rootParent));
-//        //初始化黄油刀控件绑定框架
-//        unbinder = ButterKnife.bind(this, view);
+        if (getLayoutResID() != -1) {
+            LayoutInflater.from(this).inflate(getLayoutResID(), findViewById(R.id.rootParent));
+        } else if (getViewBindingView() != null) {
+            ((FrameLayout) findViewById(R.id.rootParent)).addView(getViewBindingView());
+        }
+
         //初始化黄油刀控件绑定框架
         unbinder = ButterKnife.bind(this);
         mHandler = new Handler();
@@ -171,7 +176,13 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
         }
     }
 
-    protected abstract int getLayoutResID();
+    protected int getLayoutResID() {
+        return -1;
+    }
+
+    protected View getViewBindingView() {
+        return null;
+    }
 
     protected abstract void initView();
 
@@ -315,7 +326,6 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter> extends
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDefaultEvent(MetaChangedEvent event) {
     }
-
 
 
     /**

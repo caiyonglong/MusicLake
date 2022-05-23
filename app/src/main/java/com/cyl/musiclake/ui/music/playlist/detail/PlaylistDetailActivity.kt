@@ -186,8 +186,10 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
                         title(R.string.playlist_rename)
                         positiveButton(R.string.sure)
                         negativeButton(R.string.cancel)
-                        input(hintRes = R.string.input_playlist, maxLength = 10, prefill = playlist.name,
-                                inputType = InputType.TYPE_CLASS_TEXT) { dialog, input ->
+                        input(
+                            hintRes = R.string.input_playlist, maxLength = 10, prefill = playlist.name,
+                            inputType = InputType.TYPE_CLASS_TEXT
+                        ) { dialog, input ->
                             LogUtil.e("=====", input.toString())
                         }
                         positiveButton {
@@ -262,7 +264,7 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
         songList?.let {
             musicList.addAll(songList)
         }
-        mAdapter?.setNewData(musicList)
+        mAdapter?.setNewInstance(musicList)
         if (coverUrl == null) {
             mPlaylist?.coverUrl?.let {
                 coverUrl = it
