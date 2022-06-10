@@ -77,7 +77,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     testImplementation 'junit:junit:4.13.2'
     implementation 'com.google.android.material:material:1.6.0'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'androidx.appcompat:appcompat:1.4.2'
     implementation 'androidx.palette:palette-ktx:1.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
@@ -128,7 +128,6 @@ dependencies {
 //    implementation 'com.devbrackets.android:exomedia:4.3.0'
 
     kapt 'com.google.dagger:dagger-compiler:2.41'
-
     implementation "org.jetbrains.anko:anko-appcompat-v7-commons:$anko_version"
 
     //exoplayer

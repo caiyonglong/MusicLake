@@ -4,6 +4,7 @@ import android.content.Intent
 import android.text.InputType
 import android.view.Menu
 import android.view.MenuItem
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.input.getInputField
 import com.afollestad.materialdialogs.input.input
@@ -124,8 +125,8 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
     }
 
     override fun initView() {
-        mAdapter = SongAdapter(musicList)
-        recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
+        mAdapter = SongAdapter(mutableListOf())
+        recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.addItemDecoration(ItemDecoration(this, ItemDecoration.VERTICAL_LIST))
         recyclerView.adapter = mAdapter
         fab.setOnClickListener { PlayManager.play(0, musicList, pid) }
@@ -261,6 +262,7 @@ class PlaylistDetailActivity : BaseActivity<PlaylistDetailPresenter>(), Playlist
 
     override fun showPlaylistSongs(songList: MutableList<Music>?) {
         hideLoading()
+        LogUtil.e("showPlaylistSongs size =${songList?.size}")
         songList?.let {
             musicList.addAll(songList)
         }
