@@ -31,6 +31,7 @@ import org.jetbrains.anko.support.v4.startActivity
 class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract.View, View.OnClickListener {
 
     private val TAG = "DiscoverFragment"
+
     /**
      * 适配器
      */
@@ -108,6 +109,7 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
     }
 
     override fun onLazyLoad() {
+        successCount = 0
         mPresenter?.loadArtists()
         mPresenter?.loadRaios()
 //        mPresenter?.loadRecommendSongs()
@@ -188,7 +190,14 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
         } else {
             mNeteaseAdapter?.setNewData(playlist)
         }
-        playlistView.visibility = if (playlist.size > 0) View.VISIBLE else View.GONE
+        playlistView.visibility = if (playlist.size > 0) {
+            successCount++
+            View.VISIBLE
+        } else {
+            successCount--
+            View.GONE
+        }
+        updateLoadStatus()
     }
 
     /**
@@ -210,7 +219,14 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
         } else {
             mArtistListAdapter?.setNewData(artists)
         }
-        artistView.visibility = if (artists.size <= 0) View.GONE else View.VISIBLE
+        artistView.visibility = if (artists.size <= 0) {
+            successCount--
+            View.GONE
+        } else {
+            successCount++
+            View.VISIBLE
+        }
+        updateLoadStatus()
     }
 
     /**
@@ -235,9 +251,12 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
         if (channels.size > 0) {
             containerView.visibility = View.VISIBLE
             radioView.visibility = View.VISIBLE
+            successCount++
         } else {
+            successCount--
             radioView.visibility = View.GONE
         }
+        updateLoadStatus()
     }
 
     /**
@@ -266,6 +285,9 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
             mPlaylistAdapter?.setNewData(this.recommendPlaylist)
         }
         recommendPlaylistView.visibility = if (recommendPlaylist.size <= 0) View.GONE else View.VISIBLE
+
+        successCount = if (recommendPlaylist.size == 0) successCount + 1 else successCount - 1
+        updateLoadStatus()
     }
 
     /**
@@ -292,6 +314,8 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
         } else {
             mMusicAdapter?.setNewData(recommend)
         }
+        successCount = if (songs.size == 0) successCount + 1 else successCount - 1
+        updateLoadStatus()
     }
 
     /**
@@ -299,6 +323,16 @@ class DiscoverFragment : BaseLazyFragment<DiscoverPresenter>(), DiscoverContract
      */
     override fun showPersonalFm(playlist: Playlist) {
         PlayManager.play(0, playlist.musicList, playlist.pid)
+    }
+
+    var successCount = 0
+
+    @Synchronized
+    fun updateLoadStatus() {
+        LogUtil.d(TAG, "successCount= $successCount")
+        if (successCount == -2) {
+            showError("接口请求失败，请稍后重试！", true)
+        }
     }
 
 

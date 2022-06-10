@@ -15,7 +15,6 @@
         android:layout_height="match_parent"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:visibility="gone"
         tools:visibility="visible">
 
         <LinearLayout
@@ -31,7 +30,6 @@
                 android:background="?backgroundColor"
                 android:paddingTop="@dimen/dp_8"
                 android:paddingBottom="@dimen/dp_8"
-                android:visibility="gone"
                 app:canLoop="true"
                 app:indicatorAlign="center"
                 app:indicatorPaddingLeft="8dp"
@@ -358,7 +356,7 @@
                     android:paddingEnd="@dimen/dp_8" />
             </LinearLayout>
 
-            <include layout="@layout/item_loading"/>
+            <include layout="@layout/item_loading" />
 
         </LinearLayout>
 
